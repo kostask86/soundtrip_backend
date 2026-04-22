@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.tables import Emotion
+from app.models.tables import Emotion, EmotionCategory
 from app.schemas.ontology import EmotionCreate, EmotionUpdate
 
 
@@ -20,6 +20,20 @@ def get_emotion(db: Session, emotion_id: int) -> Emotion | None:
 def list_emotions(db: Session, limit: int = 50, offset: int = 0) -> list[Emotion]:
     stmt = select(Emotion).order_by(Emotion.id.asc()).offset(offset).limit(limit)
     return list(db.scalars(stmt))
+
+
+def list_emotion_categories(db: Session, limit: int = 100, offset: int = 0) -> list[EmotionCategory]:
+    stmt = select(EmotionCategory).order_by(EmotionCategory.id.asc()).offset(offset).limit(limit)
+    return list(db.scalars(stmt))
+
+
+def list_emotions_grouped_by_category(db: Session) -> list[dict]:
+    categories = list(db.scalars(select(EmotionCategory).order_by(EmotionCategory.id.asc())))
+    emotions = list(db.scalars(select(Emotion).order_by(Emotion.id.asc())))
+    grouped: dict[int, list[Emotion]] = {}
+    for row in emotions:
+        grouped.setdefault(row.category_id, []).append(row)
+    return [{"category": category, "children": grouped.get(category.id, [])} for category in categories]
 
 
 def update_emotion(db: Session, row: Emotion, payload: EmotionUpdate) -> Emotion:

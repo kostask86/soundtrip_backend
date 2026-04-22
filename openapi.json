@@ -479,6 +479,29 @@
       }
     },
     "/api/v1/emotions": {
+      "get": {
+        "tags": [
+          "emotions"
+        ],
+        "summary": "List Emotions",
+        "operationId": "list_emotions_api_v1_emotions_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/EmotionCategoryWithChildren"
+                  },
+                  "type": "array",
+                  "title": "Response List Emotions Api V1 Emotions Get"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "emotions"
@@ -486,14 +509,14 @@
         "summary": "Create Emotion",
         "operationId": "create_emotion_api_v1_emotions_post",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/EmotionCreate"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "201": {
@@ -517,13 +540,15 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/v1/emotions/categories": {
       "get": {
         "tags": [
           "emotions"
         ],
-        "summary": "List Emotions",
-        "operationId": "list_emotions_api_v1_emotions_get",
+        "summary": "List Emotion Categories",
+        "operationId": "list_emotion_categories_api_v1_emotions_categories_get",
         "parameters": [
           {
             "name": "limit",
@@ -531,9 +556,9 @@
             "required": false,
             "schema": {
               "type": "integer",
-              "maximum": 200,
+              "maximum": 500,
               "minimum": 1,
-              "default": 50,
+              "default": 100,
               "title": "Limit"
             }
           },
@@ -557,9 +582,9 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/EmotionRead"
+                    "$ref": "#/components/schemas/EmotionCategoryRead"
                   },
-                  "title": "Response List Emotions Api V1 Emotions Get"
+                  "title": "Response List Emotion Categories Api V1 Emotions Categories Get"
                 }
               }
             }
@@ -703,6 +728,29 @@
       }
     },
     "/api/v1/influences": {
+      "get": {
+        "tags": [
+          "influences"
+        ],
+        "summary": "List Influences",
+        "operationId": "list_influences_api_v1_influences_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/InfluenceCategoryWithChildren"
+                  },
+                  "type": "array",
+                  "title": "Response List Influences Api V1 Influences Get"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "influences"
@@ -710,14 +758,14 @@
         "summary": "Create Influence",
         "operationId": "create_influence_api_v1_influences_post",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/InfluenceCreate"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "201": {
@@ -741,13 +789,15 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/v1/influences/categories": {
       "get": {
         "tags": [
           "influences"
         ],
-        "summary": "List Influences",
-        "operationId": "list_influences_api_v1_influences_get",
+        "summary": "List Influence Categories",
+        "operationId": "list_influence_categories_api_v1_influences_categories_get",
         "parameters": [
           {
             "name": "limit",
@@ -755,9 +805,9 @@
             "required": false,
             "schema": {
               "type": "integer",
-              "maximum": 200,
+              "maximum": 500,
               "minimum": 1,
-              "default": 50,
+              "default": 100,
               "title": "Limit"
             }
           },
@@ -781,9 +831,9 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/InfluenceRead"
+                    "$ref": "#/components/schemas/InfluenceCategoryRead"
                   },
-                  "title": "Response List Influences Api V1 Influences Get"
+                  "title": "Response List Influence Categories Api V1 Influences Categories Get"
                 }
               }
             }
@@ -1149,10 +1199,288 @@
           }
         }
       }
+    },
+    "/api/v1/time-periods": {
+      "post": {
+        "tags": [
+          "time-periods"
+        ],
+        "summary": "Create Time Period",
+        "operationId": "create_time_period_api_v1_time_periods_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimePeriodCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimePeriodRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "time-periods"
+        ],
+        "summary": "List Time Periods",
+        "operationId": "list_time_periods_api_v1_time_periods_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TimePeriodRead"
+                  },
+                  "title": "Response List Time Periods Api V1 Time Periods Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/time-periods/{time_period_id}": {
+      "get": {
+        "tags": [
+          "time-periods"
+        ],
+        "summary": "Get Time Period",
+        "operationId": "get_time_period_api_v1_time_periods__time_period_id__get",
+        "parameters": [
+          {
+            "name": "time_period_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Time Period Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimePeriodRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "time-periods"
+        ],
+        "summary": "Update Time Period",
+        "operationId": "update_time_period_api_v1_time_periods__time_period_id__put",
+        "parameters": [
+          {
+            "name": "time_period_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Time Period Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimePeriodUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimePeriodRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "time-periods"
+        ],
+        "summary": "Delete Time Period",
+        "operationId": "delete_time_period_api_v1_time_periods__time_period_id__delete",
+        "parameters": [
+          {
+            "name": "time_period_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Time Period Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "EmotionCategoryRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "key",
+          "label"
+        ],
+        "title": "EmotionCategoryRead"
+      },
+      "EmotionCategoryWithChildren": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "children": {
+            "items": {
+              "$ref": "#/components/schemas/EmotionRead"
+            },
+            "type": "array",
+            "title": "Children"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "key",
+          "label",
+          "children"
+        ],
+        "title": "EmotionCategoryWithChildren"
+      },
       "EmotionCreate": {
         "properties": {
           "category_id": {
@@ -1348,6 +1676,60 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "InfluenceCategoryRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "key",
+          "label"
+        ],
+        "title": "InfluenceCategoryRead"
+      },
+      "InfluenceCategoryWithChildren": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "children": {
+            "items": {
+              "$ref": "#/components/schemas/InfluenceRead"
+            },
+            "type": "array",
+            "title": "Children"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "key",
+          "label",
+          "children"
+        ],
+        "title": "InfluenceCategoryWithChildren"
       },
       "InfluenceCreate": {
         "properties": {
@@ -1869,6 +2251,107 @@
           "label"
         ],
         "title": "StyleUpdate"
+      },
+      "TimePeriodCreate": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Label"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label"
+        ],
+        "title": "TimePeriodCreate"
+      },
+      "TimePeriodRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "key",
+          "label",
+          "description"
+        ],
+        "title": "TimePeriodRead"
+      },
+      "TimePeriodUpdate": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Label"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label"
+        ],
+        "title": "TimePeriodUpdate"
       },
       "ValidationError": {
         "properties": {

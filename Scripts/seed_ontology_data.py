@@ -1,4 +1,4 @@
-"""Seed ontology reference tables from info.json.
+"""Seed ontology reference tables from Scripts/ontology_data.json.
 
 Seeds:
 - styles
@@ -37,7 +37,7 @@ from app.models.tables import (
 
 
 def _load_info_payload() -> dict:
-    with (ROOT_DIR / "info.json").open("r", encoding="utf-8") as f:
+    with (ROOT_DIR / "Scripts" / "ontology_data.json").open("r", encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -168,7 +168,7 @@ def clear_ontology_data(bind: Engine | Connection) -> None:
 
 def main() -> None:
     seed_ontology_data(bind=engine)
-    print("Ontology data seeded from info.json (example_song ignored).")
+    print("Ontology data seeded from Scripts/ontology_data.json (example_song ignored).")
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError
 
 from app.api.deps import SessionDep
-from app.schemas.ontology import InfluenceCreate, InfluenceRead, InfluenceUpdate
+from app.schemas.ontology import InfluenceCategoryRead, InfluenceCategoryWithChildren, InfluenceCreate, InfluenceRead, InfluenceUpdate
 from app.services import influences
 
 router = APIRouter(prefix="/influences", tags=["influences"])
@@ -18,14 +18,30 @@ def create_influence(db: SessionDep, payload: InfluenceCreate) -> InfluenceRead:
     return InfluenceRead.model_validate(row)
 
 
-@router.get("", response_model=list[InfluenceRead])
+@router.get("", response_model=list[InfluenceCategoryWithChildren])
 def list_influences(
     db: SessionDep,
-    limit: int = Query(default=50, ge=1, le=200),
+) -> list[InfluenceCategoryWithChildren]:
+    grouped = influences.list_influences_grouped_by_category(db)
+    return [
+        InfluenceCategoryWithChildren(
+            id=item["category"].id,
+            key=item["category"].key,
+            label=item["category"].label,
+            children=[InfluenceRead.model_validate(child) for child in item["children"]],
+        )
+        for item in grouped
+    ]
+
+
+@router.get("/categories", response_model=list[InfluenceCategoryRead])
+def list_influence_categories(
+    db: SessionDep,
+    limit: int = Query(default=100, ge=1, le=500),
     offset: int = Query(default=0, ge=0),
-) -> list[InfluenceRead]:
-    rows = influences.list_influences(db, limit=limit, offset=offset)
-    return [InfluenceRead.model_validate(row) for row in rows]
+) -> list[InfluenceCategoryRead]:
+    rows = influences.list_influence_categories(db, limit=limit, offset=offset)
+    return [InfluenceCategoryRead.model_validate(row) for row in rows]
 
 
 @router.get("/{influence_id}", response_model=InfluenceRead)

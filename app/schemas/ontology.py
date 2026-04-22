@@ -41,6 +41,18 @@ class EmotionRead(BaseModel):
     label: str
 
 
+class EmotionCategoryRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    key: str
+    label: str
+
+
+class EmotionCategoryWithChildren(EmotionCategoryRead):
+    children: list[EmotionRead]
+
+
 class InfluenceCreate(BaseModel):
     category_id: int
     key: str = Field(min_length=1, max_length=160)
@@ -58,6 +70,37 @@ class InfluenceRead(BaseModel):
     category_id: int
     key: str
     label: str
+
+
+class InfluenceCategoryRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    key: str
+    label: str
+
+
+class InfluenceCategoryWithChildren(InfluenceCategoryRead):
+    children: list[InfluenceRead]
+
+
+class TimePeriodCreate(BaseModel):
+    key: str = Field(min_length=1, max_length=120)
+    label: str = Field(min_length=1, max_length=255)
+    description: str | None = None
+
+
+class TimePeriodUpdate(TimePeriodCreate):
+    pass
+
+
+class TimePeriodRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    key: str
+    label: str
+    description: str | None
 
 
 class GeographyCreate(BaseModel):

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError
 
 from app.api.deps import SessionDep
-from app.schemas.ontology import EmotionCreate, EmotionRead, EmotionUpdate
+from app.schemas.ontology import EmotionCategoryRead, EmotionCategoryWithChildren, EmotionCreate, EmotionRead, EmotionUpdate
 from app.services import emotions
 
 router = APIRouter(prefix="/emotions", tags=["emotions"])
@@ -18,14 +18,30 @@ def create_emotion(db: SessionDep, payload: EmotionCreate) -> EmotionRead:
     return EmotionRead.model_validate(row)
 
 
-@router.get("", response_model=list[EmotionRead])
+@router.get("", response_model=list[EmotionCategoryWithChildren])
 def list_emotions(
     db: SessionDep,
-    limit: int = Query(default=50, ge=1, le=200),
+) -> list[EmotionCategoryWithChildren]:
+    grouped = emotions.list_emotions_grouped_by_category(db)
+    return [
+        EmotionCategoryWithChildren(
+            id=item["category"].id,
+            key=item["category"].key,
+            label=item["category"].label,
+            children=[EmotionRead.model_validate(child) for child in item["children"]],
+        )
+        for item in grouped
+    ]
+
+
+@router.get("/categories", response_model=list[EmotionCategoryRead])
+def list_emotion_categories(
+    db: SessionDep,
+    limit: int = Query(default=100, ge=1, le=500),
     offset: int = Query(default=0, ge=0),
-) -> list[EmotionRead]:
-    rows = emotions.list_emotions(db, limit=limit, offset=offset)
-    return [EmotionRead.model_validate(row) for row in rows]
+) -> list[EmotionCategoryRead]:
+    rows = emotions.list_emotion_categories(db, limit=limit, offset=offset)
+    return [EmotionCategoryRead.model_validate(row) for row in rows]
 
 
 @router.get("/{emotion_id}", response_model=EmotionRead)
