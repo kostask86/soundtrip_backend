@@ -9,7 +9,7 @@ from typing import Sequence, Union
 
 from alembic import op
 
-from Scripts.seed_ontology_data import clear_ontology_data, seed_ontology_data
+from scripts.seed_ontology_data import clear_ontology_data, seed_ontology_data
 
 revision: str = "20260422_0002"
 down_revision: Union[str, None] = "20260422_0001"

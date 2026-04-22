@@ -128,3 +128,24 @@ class SongSecondaryGeography(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     song_id: Mapped[int] = mapped_column(ForeignKey("songs.id"), nullable=False, index=True)
     geography_id: Mapped[int] = mapped_column(ForeignKey("geographies.id"), nullable=False, index=True)
+
+
+class Playlist(Base):
+    __tablename__ = "playlists"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    title: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    user_prompt: Mapped[str] = mapped_column(Text, nullable=False)
+    songs_json: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+
+class PlaylistSong(Base):
+    __tablename__ = "playlist_songs"
+    __table_args__ = (UniqueConstraint("playlist_id", "position", name="uq_playlist_song_position"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    playlist_id: Mapped[int] = mapped_column(ForeignKey("playlists.id"), nullable=False, index=True)
+    song_id: Mapped[int] = mapped_column(ForeignKey("songs.id"), nullable=False, index=True)
+    position: Mapped[int] = mapped_column(Integer, nullable=False)

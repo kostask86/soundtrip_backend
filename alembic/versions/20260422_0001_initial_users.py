@@ -9,7 +9,7 @@ Create Date: 2026-04-22
 from typing import Sequence, Union
 
 from alembic import op
-from Scripts.create_db_tables import create_db_tables, drop_db_tables
+from scripts.create_db_tables import create_db_tables, drop_db_tables
 
 revision: str = "20260422_0001"
 down_revision: Union[str, None] = None

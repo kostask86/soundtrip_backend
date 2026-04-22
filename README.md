@@ -21,7 +21,7 @@ alembic upgrade head
 Create tables directly from models metadata (bootstrap utility script):
 
 ```bash
-python Scripts/create_db_tables.py
+python scripts/create_db_tables.py
 ```
 
 ## Run API
