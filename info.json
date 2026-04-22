@@ -1,0 +1,798 @@
+{
+    "styles": [
+      {
+        "id": "rock",
+        "label": "Rock",
+        "level": 1,
+        "children": [
+          { "id": "classic_rock", "label": "Classic Rock", "level": 2 },
+          { "id": "hard_rock", "label": "Hard Rock", "level": 2 },
+          { "id": "soft_rock", "label": "Soft Rock", "level": 2 },
+          { "id": "blues_rock", "label": "Blues Rock", "level": 2 },
+          { "id": "folk_rock", "label": "Folk Rock", "level": 2 },
+          { "id": "psychedelic_rock", "label": "Psychedelic Rock", "level": 2 },
+          { "id": "acid_rock", "label": "Acid Rock", "level": 2 },
+          { "id": "progressive_rock", "label": "Progressive Rock", "level": 2 },
+          { "id": "art_rock", "label": "Art Rock", "level": 2 },
+          { "id": "garage_rock", "label": "Garage Rock", "level": 2 },
+          { "id": "glam_rock", "label": "Glam Rock", "level": 2 },
+          { "id": "southern_rock", "label": "Southern Rock", "level": 2 },
+          { "id": "country_rock", "label": "Country Rock", "level": 2 },
+          { "id": "arena_rock", "label": "Arena Rock", "level": 2 },
+          { "id": "heartland_rock", "label": "Heartland Rock", "level": 2 },
+          { "id": "surf_rock", "label": "Surf Rock", "level": 2 },
+          { "id": "space_rock", "label": "Space Rock", "level": 2 },
+          { "id": "krautrock", "label": "Krautrock", "level": 2 },
+          { "id": "stoner_rock", "label": "Stoner Rock", "level": 2 },
+          { "id": "desert_rock", "label": "Desert Rock", "level": 2 },
+          { "id": "indie_rock", "label": "Indie Rock", "level": 2 },
+          { "id": "alternative_rock", "label": "Alternative Rock", "level": 2 },
+          { "id": "lo_fi_rock", "label": "Lo-Fi Rock", "level": 2 },
+          { "id": "post_rock", "label": "Post-Rock", "level": 2 },
+          { "id": "math_rock", "label": "Math Rock", "level": 2 },
+          { "id": "noise_rock", "label": "Noise Rock", "level": 2 },
+          { "id": "shoegaze", "label": "Shoegaze", "level": 2 },
+          { "id": "dream_pop", "label": "Dream Pop", "level": 2 },
+          { "id": "grunge", "label": "Grunge", "level": 2 },
+          { "id": "britpop", "label": "Britpop", "level": 2 }
+        ]
+      },
+      {
+        "id": "metal",
+        "label": "Metal",
+        "level": 1,
+        "children": [
+          { "id": "heavy_metal", "label": "Heavy Metal", "level": 2 },
+          { "id": "traditional_heavy_metal", "label": "Traditional Heavy Metal", "level": 2 },
+          { "id": "nwobhm", "label": "NWOBHM", "level": 2 },
+          { "id": "speed_metal", "label": "Speed Metal", "level": 2 },
+          { "id": "thrash_metal", "label": "Thrash Metal", "level": 2 },
+          { "id": "death_metal", "label": "Death Metal", "level": 2 },
+          { "id": "melodic_death_metal", "label": "Melodic Death Metal", "level": 2 },
+          { "id": "technical_death_metal", "label": "Technical Death Metal", "level": 2 },
+          { "id": "brutal_death_metal", "label": "Brutal Death Metal", "level": 2 },
+          { "id": "black_metal", "label": "Black Metal", "level": 2 },
+          { "id": "atmospheric_black_metal", "label": "Atmospheric Black Metal", "level": 2 },
+          { "id": "symphonic_black_metal", "label": "Symphonic Black Metal", "level": 2 },
+          { "id": "doom_metal", "label": "Doom Metal", "level": 2 },
+          { "id": "funeral_doom", "label": "Funeral Doom", "level": 2 },
+          { "id": "sludge_metal", "label": "Sludge Metal", "level": 2 },
+          { "id": "stoner_metal", "label": "Stoner Metal", "level": 2 },
+          { "id": "power_metal", "label": "Power Metal", "level": 2 },
+          { "id": "progressive_metal", "label": "Progressive Metal", "level": 2 },
+          { "id": "folk_metal", "label": "Folk Metal", "level": 2 },
+          { "id": "viking_metal", "label": "Viking Metal", "level": 2 },
+          { "id": "industrial_metal", "label": "Industrial Metal", "level": 2 },
+          { "id": "groove_metal", "label": "Groove Metal", "level": 2 },
+          { "id": "nu_metal", "label": "Nu Metal", "level": 2 },
+          { "id": "metalcore", "label": "Metalcore", "level": 2 },
+          { "id": "deathcore", "label": "Deathcore", "level": 2 },
+          { "id": "post_metal", "label": "Post-Metal", "level": 2 },
+          { "id": "symphonic_metal", "label": "Symphonic Metal", "level": 2 },
+          { "id": "avant_garde_metal", "label": "Avant-Garde Metal", "level": 2 }
+        ]
+      },
+      {
+        "id": "punk",
+        "label": "Punk",
+        "level": 1,
+        "children": [
+          { "id": "punk_rock", "label": "Punk Rock", "level": 2 },
+          { "id": "pop_punk", "label": "Pop Punk", "level": 2 },
+          { "id": "hardcore_punk", "label": "Hardcore Punk", "level": 2 },
+          { "id": "proto_punk", "label": "Proto-Punk", "level": 2 },
+          { "id": "post_punk", "label": "Post-Punk", "level": 2 },
+          { "id": "new_wave", "label": "New Wave", "level": 2 },
+          { "id": "no_wave", "label": "No Wave", "level": 2 },
+          { "id": "gothic_rock", "label": "Gothic Rock", "level": 2 },
+          { "id": "darkwave", "label": "Darkwave", "level": 2 }
+        ]
+      },
+      {
+        "id": "folk",
+        "label": "Folk",
+        "level": 1,
+        "children": [
+          { "id": "traditional_folk", "label": "Traditional Folk", "level": 2 },
+          { "id": "contemporary_folk", "label": "Contemporary Folk", "level": 2 },
+          { "id": "american_folk", "label": "American Folk", "level": 2 },
+          { "id": "british_folk", "label": "British Folk", "level": 2 },
+          { "id": "celtic_folk", "label": "Celtic Folk", "level": 2 },
+          { "id": "indie_folk", "label": "Indie Folk", "level": 2 },
+          { "id": "neofolk", "label": "Neofolk", "level": 2 },
+          { "id": "folk_pop", "label": "Folk Pop", "level": 2 },
+          { "id": "folk_blues", "label": "Folk Blues", "level": 2 },
+          { "id": "singer_songwriter", "label": "Singer-Songwriter", "level": 2 }
+        ]
+      },
+      {
+        "id": "blues",
+        "label": "Blues",
+        "level": 1,
+        "children": [
+          { "id": "delta_blues", "label": "Delta Blues", "level": 2 },
+          { "id": "chicago_blues", "label": "Chicago Blues", "level": 2 },
+          { "id": "electric_blues", "label": "Electric Blues", "level": 2 },
+          { "id": "country_blues", "label": "Country Blues", "level": 2 },
+          { "id": "blues_pop", "label": "Blues Pop", "level": 2 }
+        ]
+      },
+      {
+        "id": "country",
+        "label": "Country",
+        "level": 1,
+        "children": [
+          { "id": "classic_country", "label": "Classic Country", "level": 2 },
+          { "id": "outlaw_country", "label": "Outlaw Country", "level": 2 },
+          { "id": "alt_country", "label": "Alt-Country", "level": 2 },
+          { "id": "americana", "label": "Americana", "level": 2 },
+          { "id": "country_pop", "label": "Country Pop", "level": 2 },
+          { "id": "country_blues", "label": "Country Blues", "level": 2 }
+        ]
+      },
+      {
+        "id": "pop",
+        "label": "Pop",
+        "level": 1,
+        "children": [
+          { "id": "art_pop", "label": "Art Pop", "level": 2 },
+          { "id": "baroque_pop", "label": "Baroque Pop", "level": 2 },
+          { "id": "chamber_pop", "label": "Chamber Pop", "level": 2 },
+          { "id": "indie_pop", "label": "Indie Pop", "level": 2 },
+          { "id": "bedroom_pop", "label": "Bedroom Pop", "level": 2 },
+          { "id": "dance_pop", "label": "Dance Pop", "level": 2 },
+          { "id": "electropop", "label": "Electropop", "level": 2 },
+          { "id": "synthpop", "label": "Synthpop", "level": 2 },
+          { "id": "sunshine_pop", "label": "Sunshine Pop", "level": 2 },
+          { "id": "teen_pop", "label": "Teen Pop", "level": 2 },
+          { "id": "orchestral_pop", "label": "Orchestral Pop", "level": 2 },
+          { "id": "pop_rock", "label": "Pop Rock", "level": 2 }
+        ]
+      },
+      {
+        "id": "soul",
+        "label": "Soul",
+        "level": 1,
+        "children": [
+          { "id": "northern_soul", "label": "Northern Soul", "level": 2 },
+          { "id": "neo_soul", "label": "Neo Soul", "level": 2 },
+          { "id": "blue_eyed_soul", "label": "Blue-Eyed Soul", "level": 2 },
+          { "id": "deep_soul", "label": "Deep Soul", "level": 2 },
+          { "id": "psychedelic_soul", "label": "Psychedelic Soul", "level": 2 }
+        ]
+      },
+      {
+        "id": "rnb",
+        "label": "R&B",
+        "level": 1,
+        "children": [
+          { "id": "contemporary_rnb", "label": "Contemporary R&B", "level": 2 },
+          { "id": "alternative_rnb", "label": "Alternative R&B", "level": 2 }
+        ]
+      },
+      {
+        "id": "funk",
+        "label": "Funk",
+        "level": 1,
+        "children": [
+          { "id": "p_funk", "label": "P-Funk", "level": 2 },
+          { "id": "funk_rock", "label": "Funk Rock", "level": 2 },
+          { "id": "boogie", "label": "Boogie", "level": 2 }
+        ]
+      },
+      {
+        "id": "jazz",
+        "label": "Jazz",
+        "level": 1,
+        "children": [
+          { "id": "bebop", "label": "Bebop", "level": 2 },
+          { "id": "hard_bop", "label": "Hard Bop", "level": 2 },
+          { "id": "cool_jazz", "label": "Cool Jazz", "level": 2 },
+          { "id": "modal_jazz", "label": "Modal Jazz", "level": 2 },
+          { "id": "free_jazz", "label": "Free Jazz", "level": 2 },
+          { "id": "jazz_fusion", "label": "Jazz Fusion", "level": 2 },
+          { "id": "smooth_jazz", "label": "Smooth Jazz", "level": 2 },
+          { "id": "vocal_jazz", "label": "Vocal Jazz", "level": 2 },
+          { "id": "latin_jazz", "label": "Latin Jazz", "level": 2 },
+          { "id": "soul_jazz", "label": "Soul Jazz", "level": 2 },
+          { "id": "acid_jazz", "label": "Acid Jazz", "level": 2 },
+          { "id": "avant_garde_jazz", "label": "Avant-Garde Jazz", "level": 2 }
+        ]
+      },
+      {
+        "id": "electronic",
+        "label": "Electronic",
+        "level": 1,
+        "children": [
+          { "id": "ambient", "label": "Ambient", "level": 2 },
+          { "id": "dark_ambient", "label": "Dark Ambient", "level": 2 },
+          { "id": "drone", "label": "Drone", "level": 2 },
+          { "id": "downtempo", "label": "Downtempo", "level": 2 },
+          { "id": "trip_hop", "label": "Trip Hop", "level": 2 },
+          { "id": "idm", "label": "IDM", "level": 2 },
+          { "id": "glitch", "label": "Glitch", "level": 2 },
+          { "id": "house", "label": "House", "level": 2 },
+          { "id": "deep_house", "label": "Deep House", "level": 2 },
+          { "id": "tech_house", "label": "Tech House", "level": 2 },
+          { "id": "progressive_house", "label": "Progressive House", "level": 2 },
+          { "id": "acid_house", "label": "Acid House", "level": 2 },
+          { "id": "techno", "label": "Techno", "level": 2 },
+          { "id": "minimal_techno", "label": "Minimal Techno", "level": 2 },
+          { "id": "detroit_techno", "label": "Detroit Techno", "level": 2 },
+          { "id": "trance", "label": "Trance", "level": 2 },
+          { "id": "progressive_trance", "label": "Progressive Trance", "level": 2 },
+          { "id": "psytrance", "label": "Psytrance", "level": 2 },
+          { "id": "drum_and_bass", "label": "Drum and Bass", "level": 2 },
+          { "id": "jungle", "label": "Jungle", "level": 2 },
+          { "id": "breakbeat", "label": "Breakbeat", "level": 2 },
+          { "id": "big_beat", "label": "Big Beat", "level": 2 },
+          { "id": "dubstep", "label": "Dubstep", "level": 2 },
+          { "id": "uk_garage", "label": "UK Garage", "level": 2 },
+          { "id": "electro", "label": "Electro", "level": 2 },
+          { "id": "industrial", "label": "Industrial", "level": 2 },
+          { "id": "ebm", "label": "EBM", "level": 2 },
+          { "id": "synthwave", "label": "Synthwave", "level": 2 },
+          { "id": "chillwave", "label": "Chillwave", "level": 2 }
+        ]
+      },
+      {
+        "id": "hip_hop",
+        "label": "Hip Hop",
+        "level": 1,
+        "children": [
+          { "id": "old_school_hip_hop", "label": "Old School Hip Hop", "level": 2 },
+          { "id": "boom_bap", "label": "Boom Bap", "level": 2 },
+          { "id": "conscious_hip_hop", "label": "Conscious Hip Hop", "level": 2 },
+          { "id": "jazz_rap", "label": "Jazz Rap", "level": 2 },
+          { "id": "alternative_hip_hop", "label": "Alternative Hip Hop", "level": 2 },
+          { "id": "trap", "label": "Trap", "level": 2 },
+          { "id": "drill", "label": "Drill", "level": 2 },
+          { "id": "cloud_rap", "label": "Cloud Rap", "level": 2 },
+          { "id": "experimental_hip_hop", "label": "Experimental Hip Hop", "level": 2 }
+        ]
+      },
+      {
+        "id": "reggae",
+        "label": "Reggae",
+        "level": 1,
+        "children": [
+          { "id": "roots_reggae", "label": "Roots Reggae", "level": 2 },
+          { "id": "dub", "label": "Dub", "level": 2 },
+          { "id": "dancehall", "label": "Dancehall", "level": 2 },
+          { "id": "ska", "label": "Ska", "level": 2 },
+          { "id": "rocksteady", "label": "Rocksteady", "level": 2 }
+        ]
+      },
+      {
+        "id": "latin",
+        "label": "Latin",
+        "level": 1,
+        "children": [
+          { "id": "latin_pop", "label": "Latin Pop", "level": 2 },
+          { "id": "bossa_nova", "label": "Bossa Nova", "level": 2 },
+          { "id": "salsa", "label": "Salsa", "level": 2 },
+          { "id": "tango", "label": "Tango", "level": 2 },
+          { "id": "flamenco", "label": "Flamenco", "level": 2 },
+          { "id": "reggaeton", "label": "Reggaeton", "level": 2 }
+        ]
+      },
+      {
+        "id": "world",
+        "label": "World",
+        "level": 1,
+        "children": [
+          { "id": "afrobeat", "label": "Afrobeat", "level": 2 },
+          { "id": "highlife", "label": "Highlife", "level": 2 },
+          { "id": "rai", "label": "Raï", "level": 2 },
+          { "id": "fado", "label": "Fado", "level": 2 },
+          { "id": "cumbia", "label": "Cumbia", "level": 2 }
+        ]
+      },
+      {
+        "id": "classical",
+        "label": "Classical",
+        "level": 1,
+        "children": [
+          { "id": "baroque", "label": "Baroque", "level": 2 },
+          { "id": "romantic", "label": "Romantic", "level": 2 },
+          { "id": "modern_classical", "label": "Modern Classical", "level": 2 },
+          { "id": "minimalism", "label": "Minimalism", "level": 2 },
+          { "id": "opera", "label": "Opera", "level": 2 },
+          { "id": "choral", "label": "Choral", "level": 2 },
+          { "id": "orchestral", "label": "Orchestral", "level": 2 },
+          { "id": "chamber_music", "label": "Chamber Music", "level": 2 },
+          { "id": "piano_classical", "label": "Piano Classical", "level": 2 }
+        ]
+      },
+      {
+        "id": "soundtrack",
+        "label": "Soundtrack",
+        "level": 1,
+        "children": [
+          { "id": "film_score", "label": "Film Score", "level": 2 },
+          { "id": "video_game_score", "label": "Video Game Score", "level": 2 },
+          { "id": "cinematic", "label": "Cinematic", "level": 2 }
+        ]
+      },
+      {
+        "id": "experimental",
+        "label": "Experimental",
+        "level": 1,
+        "children": [
+          { "id": "avant_garde", "label": "Avant-Garde", "level": 2 },
+          { "id": "sound_collage", "label": "Sound Collage", "level": 2 },
+          { "id": "spoken_word", "label": "Spoken Word", "level": 2 },
+          { "id": "acoustic", "label": "Acoustic", "level": 2 },
+          { "id": "instrumental", "label": "Instrumental", "level": 2 }
+        ]
+      }
+    ],
+    "emotion_values": [
+      {
+        "id": "positive",
+        "label": "Positive",
+        "children": [
+          { "id": "joy", "label": "Joy" },
+          { "id": "euphoria", "label": "Euphoria" },
+          { "id": "hope", "label": "Hope" },
+          { "id": "optimism", "label": "Optimism" },
+          { "id": "warmth", "label": "Warmth" },
+          { "id": "love", "label": "Love" },
+          { "id": "romance", "label": "Romance" },
+          { "id": "confidence", "label": "Confidence" },
+          { "id": "gratitude", "label": "Gratitude" }
+        ]
+      },
+      {
+        "id": "melancholic",
+        "label": "Melancholic",
+        "children": [
+          { "id": "longing", "label": "Longing" },
+          { "id": "nostalgia", "label": "Nostalgia" },
+          { "id": "melancholy", "label": "Melancholy" },
+          { "id": "sadness", "label": "Sadness" },
+          { "id": "grief", "label": "Grief" },
+          { "id": "heartbreak", "label": "Heartbreak" },
+          { "id": "loneliness", "label": "Loneliness" },
+          { "id": "vulnerability", "label": "Vulnerability" },
+          { "id": "reflection", "label": "Reflection" },
+          { "id": "introspection", "label": "Introspection" }
+        ]
+      },
+      {
+        "id": "dark",
+        "label": "Dark",
+        "children": [
+          { "id": "tension", "label": "Tension" },
+          { "id": "anxiety", "label": "Anxiety" },
+          { "id": "fear", "label": "Fear" },
+          { "id": "paranoia", "label": "Paranoia" },
+          { "id": "anger", "label": "Anger" },
+          { "id": "rage", "label": "Rage" },
+          { "id": "darkness", "label": "Darkness" },
+          { "id": "despair", "label": "Despair" },
+          { "id": "alienation", "label": "Alienation" },
+          { "id": "doom", "label": "Doom" }
+        ]
+      },
+      {
+        "id": "energetic",
+        "label": "Energetic",
+        "children": [
+          { "id": "desire", "label": "Desire" },
+          { "id": "passion", "label": "Passion" },
+          { "id": "defiance", "label": "Defiance" },
+          { "id": "rebellion", "label": "Rebellion" },
+          { "id": "power", "label": "Power" },
+          { "id": "triumph", "label": "Triumph" },
+          { "id": "freedom", "label": "Freedom" },
+          { "id": "urgency", "label": "Urgency" },
+          { "id": "drive", "label": "Drive" }
+        ]
+      },
+      {
+        "id": "transcendent",
+        "label": "Transcendent",
+        "children": [
+          { "id": "calm", "label": "Calm" },
+          { "id": "peace", "label": "Peace" },
+          { "id": "serenity", "label": "Serenity" },
+          { "id": "mystery", "label": "Mystery" },
+          { "id": "wonder", "label": "Wonder" },
+          { "id": "awe", "label": "Awe" },
+          { "id": "spirituality", "label": "Spirituality" },
+          { "id": "revelation", "label": "Revelation" },
+          { "id": "ecstasy", "label": "Ecstasy" }
+        ]
+      }
+    ],
+    "time": [
+      {
+        "id": "pre_1950s",
+        "label": "Pre-1950s",
+        "description": "Early recorded music, blues roots, jazz roots, folk traditions, pre-rock popular music"
+      },
+      {
+        "id": "1950s",
+        "label": "1950s",
+        "description": "Early rock and roll, rhythm and blues crossover, doo-wop, classic country growth"
+      },
+      {
+        "id": "1960s",
+        "label": "1960s",
+        "description": "Psychedelia, folk revival, soul expansion, British Invasion, experimental rock beginnings"
+      },
+      {
+        "id": "1970s",
+        "label": "1970s",
+        "description": "Classic rock, prog, punk origins, disco, funk, singer-songwriter era, heavy metal emergence"
+      },
+      {
+        "id": "1980s",
+        "label": "1980s",
+        "description": "Synthpop, new wave, post-punk, thrash metal, mainstream pop expansion, early hip hop growth"
+      },
+      {
+        "id": "1990s",
+        "label": "1990s",
+        "description": "Grunge, alternative, britpop, golden-age hip hop, techno/rave growth, black metal expansion"
+      },
+      {
+        "id": "2000s",
+        "label": "2000s",
+        "description": "Indie boom, metalcore, pop punk wave, blog-era music, mainstream electronic crossover"
+      },
+      {
+        "id": "2010s",
+        "label": "2010s",
+        "description": "Streaming era, trap dominance, bedroom pop, EDM peak, genre fusion acceleration"
+      },
+      {
+        "id": "2020s",
+        "label": "2020s",
+        "description": "Post-genre fluidity, algorithmic discovery, global crossover, hybrid micro-scenes"
+      }
+    ],
+    "geography": [
+      {
+        "id": "north_america",
+        "label": "North America",
+        "description": "United States, Canada, and closely related North American popular music traditions"
+      },
+      {
+        "id": "latin_america_caribbean",
+        "label": "Latin America and Caribbean",
+        "description": "Mexico, Central America, South America, and Caribbean music cultures including Afro-Caribbean and Latin traditions"
+      },
+      {
+        "id": "british_isles",
+        "label": "British Isles",
+        "description": "England, Scotland, Wales, Ireland; major source region for rock, folk, post-punk, and electronic scenes"
+      },
+      {
+        "id": "western_europe",
+        "label": "Western Europe",
+        "description": "France, Germany, Benelux, Austria, Switzerland and nearby Western European music cultures"
+      },
+      {
+        "id": "northern_europe",
+        "label": "Northern Europe",
+        "description": "Nordic and Baltic regions; important for metal, electronic, folk, and atmospheric music scenes"
+      },
+      {
+        "id": "southern_europe_mediterranean",
+        "label": "Southern Europe and Mediterranean",
+        "description": "Italy, Spain, Portugal, Greece, Balkans and nearby Mediterranean musical traditions"
+      },
+      {
+        "id": "eastern_europe",
+        "label": "Eastern Europe",
+        "description": "Slavic, Central-Eastern and post-Soviet musical regions"
+      },
+      {
+        "id": "middle_east_north_africa",
+        "label": "Middle East and North Africa",
+        "description": "Arabic, Persian, Turkish and North African musical cultures"
+      },
+      {
+        "id": "west_africa",
+        "label": "West Africa",
+        "description": "Ghana, Nigeria, Senegal, Mali and surrounding regions; major roots of highlife, afrobeat and many diasporic influences"
+      },
+      {
+        "id": "east_africa",
+        "label": "East Africa",
+        "description": "Ethiopia, Kenya, Tanzania and surrounding East African musical cultures"
+      },
+      {
+        "id": "central_africa",
+        "label": "Central Africa",
+        "description": "Congo basin and neighboring regions; guitar-driven and rhythmic traditions with strong continental influence"
+      },
+      {
+        "id": "southern_africa",
+        "label": "Southern Africa",
+        "description": "South Africa and neighboring regions; jazz, choral, township, amapiano and related traditions"
+      },
+      {
+        "id": "south_asia",
+        "label": "South Asia",
+        "description": "India, Pakistan, Bangladesh, Sri Lanka, Nepal and related musical traditions"
+      },
+      {
+        "id": "southeast_asia",
+        "label": "Southeast Asia",
+        "description": "Indonesia, Thailand, Philippines, Vietnam, Malaysia and neighboring regional music cultures"
+      },
+      {
+        "id": "east_asia",
+        "label": "East Asia",
+        "description": "China, Japan, Korea, Taiwan and neighboring East Asian popular and traditional music worlds"
+      },
+      {
+        "id": "central_asia",
+        "label": "Central Asia",
+        "description": "Kazakhstan, Uzbekistan, Kyrgyzstan and nearby Silk Road music traditions"
+      },
+      {
+        "id": "oceania",
+        "label": "Oceania",
+        "description": "Australia, New Zealand, Pacific Islands and related regional music cultures"
+      },
+      {
+        "id": "diaspora_global_hybrid",
+        "label": "Diaspora and Global Hybrid",
+        "description": "Music shaped by migration, cross-border fusion, hybrid urban scenes and transnational influence"
+      }
+    ],
+    "influence_values": [
+      {
+        "id": "genre_roots",
+        "label": "Genre Roots",
+        "children": [
+          { "id": "blues_tradition", "label": "Blues Tradition" },
+          { "id": "american_folk_tradition", "label": "American Folk Tradition" },
+          { "id": "british_folk_tradition", "label": "British Folk Tradition" },
+          { "id": "country_roots", "label": "Country Roots" },
+          { "id": "gospel_spiritual_tradition", "label": "Gospel and Spiritual Tradition" },
+          { "id": "soul_tradition", "label": "Soul Tradition" },
+          { "id": "funk_tradition", "label": "Funk Tradition" },
+          { "id": "jazz_tradition", "label": "Jazz Tradition" },
+          { "id": "classical_composition", "label": "Classical Composition" },
+          { "id": "electronic_experimentation", "label": "Electronic Experimentation" },
+          { "id": "punk_roots", "label": "Punk Roots" },
+          { "id": "metal_roots", "label": "Metal Roots" },
+          { "id": "hip_hop_roots", "label": "Hip Hop Roots" },
+          { "id": "reggae_dub_roots", "label": "Reggae and Dub Roots" }
+        ]
+      },
+      {
+        "id": "cultural_movements",
+        "label": "Cultural Movements",
+        "children": [
+          { "id": "psychedelic_counterculture", "label": "Psychedelic Counterculture" },
+          { "id": "folk_revival", "label": "Folk Revival" },
+          { "id": "british_invasion", "label": "British Invasion" },
+          { "id": "punk_ethos", "label": "Punk Ethos" },
+          { "id": "post_punk_experimentation", "label": "Post-Punk Experimentation" },
+          { "id": "new_wave_modernism", "label": "New Wave Modernism" },
+          { "id": "club_culture", "label": "Club Culture" },
+          { "id": "rave_culture", "label": "Rave Culture" },
+          { "id": "hip_hop_culture", "label": "Hip Hop Culture" },
+          { "id": "countercultural_politics", "label": "Countercultural Politics" },
+          { "id": "romanticism", "label": "Romanticism" },
+          { "id": "modernism", "label": "Modernism" },
+          { "id": "avant_garde_art", "label": "Avant-Garde Art" }
+        ]
+      },
+      {
+        "id": "regional_traditions",
+        "label": "Regional Traditions",
+        "children": [
+          { "id": "north_american_roots", "label": "North American Roots" },
+          { "id": "appalachian_roots", "label": "Appalachian Roots" },
+          { "id": "delta_mississippi_tradition", "label": "Delta Mississippi Tradition" },
+          { "id": "chicago_urban_tradition", "label": "Chicago Urban Tradition" },
+          { "id": "british_isles_tradition", "label": "British Isles Tradition" },
+          { "id": "celtic_tradition", "label": "Celtic Tradition" },
+          { "id": "mediterranean_tradition", "label": "Mediterranean Tradition" },
+          { "id": "west_african_tradition", "label": "West African Tradition" },
+          { "id": "east_african_tradition", "label": "East African Tradition" },
+          { "id": "south_asian_tradition", "label": "South Asian Tradition" },
+          { "id": "middle_eastern_tradition", "label": "Middle Eastern Tradition" },
+          { "id": "latin_american_tradition", "label": "Latin American Tradition" },
+          { "id": "caribbean_tradition", "label": "Caribbean Tradition" },
+          { "id": "east_asian_tradition", "label": "East Asian Tradition" }
+        ]
+      },
+      {
+        "id": "artist_lineages",
+        "label": "Artist Lineages",
+        "children": [
+          { "id": "dylan_like_songwriting", "label": "Dylan-like Songwriting" },
+          { "id": "beat_poetic_writing", "label": "Beat-Poetic Writing" },
+          { "id": "blues_guitar_virtuosity", "label": "Blues Guitar Virtuosity" },
+          { "id": "singer_songwriter_confessionalism", "label": "Singer-Songwriter Confessionalism" },
+          { "id": "jam_band_improvisation", "label": "Jam Band Improvisation" },
+          { "id": "virtuoso_progressive_composition", "label": "Virtuoso Progressive Composition" },
+          { "id": "soul_vocal_lineage", "label": "Soul Vocal Lineage" },
+          { "id": "punk_directness", "label": "Punk Directness" },
+          { "id": "metal_extremity", "label": "Metal Extremity" },
+          { "id": "jazz_improvisational_language", "label": "Jazz Improvisational Language" },
+          { "id": "producer_led_pop_craft", "label": "Producer-Led Pop Craft" },
+          { "id": "dj_selector_lineage", "label": "DJ and Selector Lineage" }
+        ]
+      },
+      {
+        "id": "production_aesthetics",
+        "label": "Production Aesthetics",
+        "children": [
+          { "id": "acoustic_minimalism", "label": "Acoustic Minimalism" },
+          { "id": "wall_of_sound", "label": "Wall of Sound" },
+          { "id": "lo_fi_rawness", "label": "Lo-Fi Rawness" },
+          { "id": "studio_experimentalism", "label": "Studio Experimentalism" },
+          { "id": "analog_warmth", "label": "Analog Warmth" },
+          { "id": "orchestral_grandeur", "label": "Orchestral Grandeur" },
+          { "id": "live_room_energy", "label": "Live Room Energy" },
+          { "id": "dub_space_and_echo", "label": "Dub Space and Echo" },
+          { "id": "electronic_texture_design", "label": "Electronic Texture Design" },
+          { "id": "industrial_texture", "label": "Industrial Texture" },
+          { "id": "cinematic_sound_design", "label": "Cinematic Sound Design" },
+          { "id": "dancefloor_mix_aesthetic", "label": "Dancefloor Mix Aesthetic" }
+        ]
+      },
+      {
+        "id": "lyrical_thematic_traditions",
+        "label": "Lyrical and Thematic Traditions",
+        "children": [
+          { "id": "mythic_symbolism", "label": "Mythic Symbolism" },
+          { "id": "existential_reflection", "label": "Existential Reflection" },
+          { "id": "political_protest", "label": "Political Protest" },
+          { "id": "social_realism", "label": "Social Realism" },
+          { "id": "romantic_poetry", "label": "Romantic Poetry" },
+          { "id": "surrealism", "label": "Surrealism" },
+          { "id": "spiritual_mysticism", "label": "Spiritual Mysticism" },
+          { "id": "apocalyptic_imagery", "label": "Apocalyptic Imagery" },
+          { "id": "street_narrative", "label": "Street Narrative" },
+          { "id": "introspective_self_examination", "label": "Introspective Self-Examination" },
+          { "id": "rebellion_and_alienation", "label": "Rebellion and Alienation" },
+          { "id": "celebration_and_escape", "label": "Celebration and Escape" }
+        ]
+      }
+    ],
+    "example_song": {
+      "title": "All Along the Watchtower",
+      "artist": "The Jimi Hendrix Experience",
+      "styles": [
+        {
+          "id": "psychedelic_rock",
+          "label": "Psychedelic Rock",
+          "level": 2,
+          "role": "primary",
+          "confidence": 0.95
+        },
+        {
+          "id": "blues_rock",
+          "label": "Blues Rock",
+          "level": 2,
+          "role": "secondary",
+          "confidence": 0.9
+        },
+        {
+          "id": "classic_rock",
+          "label": "Classic Rock",
+          "level": 2,
+          "role": "secondary",
+          "confidence": 0.84
+        },
+        {
+          "id": "hard_rock",
+          "label": "Hard Rock",
+          "level": 2,
+          "role": "secondary",
+          "confidence": 0.68
+        }
+      ],
+      "emotions": [
+        {
+          "parent_id": "dark",
+          "parent_label": "Dark",
+          "id": "tension",
+          "label": "Tension",
+          "confidence": 0.94
+        },
+        {
+          "parent_id": "transcendent",
+          "parent_label": "Transcendent",
+          "id": "mystery",
+          "label": "Mystery",
+          "confidence": 0.89
+        },
+        {
+          "parent_id": "transcendent",
+          "parent_label": "Transcendent",
+          "id": "awe",
+          "label": "Awe",
+          "confidence": 0.83
+        },
+        {
+          "parent_id": "energetic",
+          "parent_label": "Energetic",
+          "id": "power",
+          "label": "Power",
+          "confidence": 0.81
+        },
+        {
+          "parent_id": "dark",
+          "parent_label": "Dark",
+          "id": "doom",
+          "label": "Doom",
+          "confidence": 0.72
+        }
+      ],
+      "time": {
+        "id": "1960s",
+        "label": "1960s"
+      },
+      "geography": {
+        "primary": {
+          "id": "north_america",
+          "label": "North America"
+        },
+        "secondary": [
+          {
+            "id": "british_isles",
+            "label": "British Isles"
+          },
+          {
+            "id": "diaspora_global_hybrid",
+            "label": "Diaspora and Global Hybrid"
+          }
+        ]
+      },
+      "influences": [
+        {
+          "parent_id": "genre_roots",
+          "parent_label": "Genre Roots",
+          "id": "american_folk_tradition",
+          "label": "American Folk Tradition",
+          "confidence": 0.93
+        },
+        {
+          "parent_id": "genre_roots",
+          "parent_label": "Genre Roots",
+          "id": "blues_tradition",
+          "label": "Blues Tradition",
+          "confidence": 0.9
+        },
+        {
+          "parent_id": "cultural_movements",
+          "parent_label": "Cultural Movements",
+          "id": "psychedelic_counterculture",
+          "label": "Psychedelic Counterculture",
+          "confidence": 0.87
+        },
+        {
+          "parent_id": "artist_lineages",
+          "parent_label": "Artist Lineages",
+          "id": "dylan_like_songwriting",
+          "label": "Dylan-like Songwriting",
+          "confidence": 0.96
+        },
+        {
+          "parent_id": "production_aesthetics",
+          "parent_label": "Production Aesthetics",
+          "id": "studio_experimentalism",
+          "label": "Studio Experimentalism",
+          "confidence": 0.78
+        },
+        {
+          "parent_id": "lyrical_thematic_traditions",
+          "parent_label": "Lyrical and Thematic Traditions",
+          "id": "apocalyptic_imagery",
+          "label": "Apocalyptic Imagery",
+          "confidence": 0.74
+        }
+      ]
+    }
+  }

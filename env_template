@@ -1,0 +1,9 @@
+APP_NAME=SoundTrip Backend
+DEBUG=false
+
+# Database (async SQLite default; swap for PostgreSQL in production)
+DATABASE_URL=sqlite+aiosqlite:///./soundtrip.db
+
+# LLM inference token
+REPLICATE_API_TOKEN=the_replicate_key
+REPLICATE_MODEL=google/gemini-3-pro
