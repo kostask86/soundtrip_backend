@@ -1,3 +1,3 @@
-from app.schemas.user import UserCreate, UserRead
+from app.schemas.song import SongCreate, SongRead, SongUpdate
 
-__all__ = ["UserCreate", "UserRead"]
+__all__ = ["SongCreate", "SongRead", "SongUpdate"]
