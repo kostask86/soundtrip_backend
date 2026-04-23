@@ -64,12 +64,14 @@ class PlaylistResponse(BaseModel):
 class PlaylistCreate(BaseModel):
     title: str | None = Field(default=None, max_length=255)
     user_prompt: str = Field(min_length=5, max_length=2000)
+    llm_prompt: str | None = None
     songs: list[PlaylistSong]
 
 
 class PlaylistUpdate(BaseModel):
     title: str | None = Field(default=None, max_length=255)
     user_prompt: str = Field(min_length=5, max_length=2000)
+    llm_prompt: str | None = None
     songs: list[PlaylistSong]
 
 
@@ -77,6 +79,7 @@ class PlaylistStoredRead(BaseModel):
     id: int
     title: str | None
     user_prompt: str
+    llm_prompt: str | None
     songs: list[PlaylistSong]
     created_at: datetime
     updated_at: datetime

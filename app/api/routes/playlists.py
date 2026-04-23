@@ -10,10 +10,11 @@ router = APIRouter(prefix="/playlists", tags=["playlists"])
 
 @router.post("/generate", response_model=PlaylistStoredRead, status_code=status.HTTP_201_CREATED)
 def generate_playlist_from_prompt(db: SessionDep, payload: PlaylistRequest) -> PlaylistStoredRead:
-    generated = generate_playlist(user_prompt=payload.prompt)
+    generated, llm_prompt = generate_playlist(user_prompt=payload.prompt)
     create_payload = PlaylistCreate(
         title=None,
         user_prompt=generated.user_prompt,
+        llm_prompt=llm_prompt,
         songs=generated.songs,
     )
     return create_playlist(db, create_payload)

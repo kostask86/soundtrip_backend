@@ -1423,6 +1423,271 @@
           }
         }
       }
+    },
+    "/api/v1/playlists/generate": {
+      "post": {
+        "tags": [
+          "playlists"
+        ],
+        "summary": "Generate Playlist From Prompt",
+        "operationId": "generate_playlist_from_prompt_api_v1_playlists_generate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaylistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistStoredRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/playlists": {
+      "post": {
+        "tags": [
+          "playlists"
+        ],
+        "summary": "Create Playlist Endpoint",
+        "operationId": "create_playlist_endpoint_api_v1_playlists_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaylistCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistStoredRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "playlists"
+        ],
+        "summary": "List Playlists Endpoint",
+        "operationId": "list_playlists_endpoint_api_v1_playlists_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlaylistStoredRead"
+                  },
+                  "title": "Response List Playlists Endpoint Api V1 Playlists Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/playlists/{playlist_id}": {
+      "get": {
+        "tags": [
+          "playlists"
+        ],
+        "summary": "Get Playlist Endpoint",
+        "operationId": "get_playlist_endpoint_api_v1_playlists__playlist_id__get",
+        "parameters": [
+          {
+            "name": "playlist_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Playlist Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistStoredRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "playlists"
+        ],
+        "summary": "Update Playlist Endpoint",
+        "operationId": "update_playlist_endpoint_api_v1_playlists__playlist_id__put",
+        "parameters": [
+          {
+            "name": "playlist_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Playlist Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaylistUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistStoredRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "playlists"
+        ],
+        "summary": "Delete Playlist Endpoint",
+        "operationId": "delete_playlist_endpoint_api_v1_playlists__playlist_id__delete",
+        "parameters": [
+          {
+            "name": "playlist_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Playlist Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1812,6 +2077,396 @@
           "label"
         ],
         "title": "InfluenceUpdate"
+      },
+      "PlaylistCreate": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "user_prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 5,
+            "title": "User Prompt"
+          },
+          "songs": {
+            "items": {
+              "$ref": "#/components/schemas/PlaylistSong-Input"
+            },
+            "type": "array",
+            "title": "Songs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_prompt",
+          "songs"
+        ],
+        "title": "PlaylistCreate"
+      },
+      "PlaylistEmotion": {
+        "properties": {
+          "parent_id": {
+            "type": "string",
+            "title": "Parent Id"
+          },
+          "parent_label": {
+            "type": "string",
+            "title": "Parent Label"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "parent_id",
+          "parent_label",
+          "id",
+          "label",
+          "confidence"
+        ],
+        "title": "PlaylistEmotion"
+      },
+      "PlaylistGeography": {
+        "properties": {
+          "primary": {
+            "$ref": "#/components/schemas/PlaylistGeographyItem"
+          },
+          "secondary": {
+            "items": {
+              "$ref": "#/components/schemas/PlaylistGeographyItem"
+            },
+            "type": "array",
+            "title": "Secondary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "primary",
+          "secondary"
+        ],
+        "title": "PlaylistGeography"
+      },
+      "PlaylistGeographyItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "title": "PlaylistGeographyItem"
+      },
+      "PlaylistInfluence": {
+        "properties": {
+          "parent_id": {
+            "type": "string",
+            "title": "Parent Id"
+          },
+          "parent_label": {
+            "type": "string",
+            "title": "Parent Label"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "parent_id",
+          "parent_label",
+          "id",
+          "label",
+          "confidence"
+        ],
+        "title": "PlaylistInfluence"
+      },
+      "PlaylistRequest": {
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 5,
+            "title": "Prompt"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt"
+        ],
+        "title": "PlaylistRequest"
+      },
+      "PlaylistSong-Input": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "artist": {
+            "type": "string",
+            "title": "Artist"
+          },
+          "styles": {
+            "items": {
+              "$ref": "#/components/schemas/PlaylistStyle"
+            },
+            "type": "array",
+            "title": "Styles"
+          },
+          "emotions": {
+            "items": {
+              "$ref": "#/components/schemas/PlaylistEmotion"
+            },
+            "type": "array",
+            "title": "Emotions"
+          },
+          "time": {
+            "$ref": "#/components/schemas/PlaylistTime"
+          },
+          "geography": {
+            "$ref": "#/components/schemas/PlaylistGeography"
+          },
+          "influences": {
+            "items": {
+              "$ref": "#/components/schemas/PlaylistInfluence"
+            },
+            "type": "array",
+            "title": "Influences"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "artist",
+          "styles",
+          "emotions",
+          "time",
+          "geography",
+          "influences"
+        ],
+        "title": "PlaylistSong"
+      },
+      "PlaylistSong-Output": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "artist": {
+            "type": "string",
+            "title": "Artist"
+          },
+          "styles": {
+            "items": {
+              "$ref": "#/components/schemas/PlaylistStyle"
+            },
+            "type": "array",
+            "title": "Styles"
+          },
+          "emotions": {
+            "items": {
+              "$ref": "#/components/schemas/PlaylistEmotion"
+            },
+            "type": "array",
+            "title": "Emotions"
+          },
+          "time": {
+            "$ref": "#/components/schemas/PlaylistTime"
+          },
+          "geography": {
+            "$ref": "#/components/schemas/PlaylistGeography"
+          },
+          "influences": {
+            "items": {
+              "$ref": "#/components/schemas/PlaylistInfluence"
+            },
+            "type": "array",
+            "title": "Influences"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "artist",
+          "styles",
+          "emotions",
+          "time",
+          "geography",
+          "influences"
+        ],
+        "title": "PlaylistSong"
+      },
+      "PlaylistStoredRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "user_prompt": {
+            "type": "string",
+            "title": "User Prompt"
+          },
+          "songs": {
+            "items": {
+              "$ref": "#/components/schemas/PlaylistSong-Output"
+            },
+            "type": "array",
+            "title": "Songs"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "user_prompt",
+          "songs",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "PlaylistStoredRead"
+      },
+      "PlaylistStyle": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "level": {
+            "type": "integer",
+            "title": "Level"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "level",
+          "role",
+          "confidence"
+        ],
+        "title": "PlaylistStyle"
+      },
+      "PlaylistTime": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "title": "PlaylistTime"
+      },
+      "PlaylistUpdate": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "user_prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 5,
+            "title": "User Prompt"
+          },
+          "songs": {
+            "items": {
+              "$ref": "#/components/schemas/PlaylistSong-Input"
+            },
+            "type": "array",
+            "title": "Songs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_prompt",
+          "songs"
+        ],
+        "title": "PlaylistUpdate"
       },
       "SongCreate": {
         "properties": {

@@ -71,7 +71,7 @@ def _parse_playlist_response(user_prompt: str, raw_text: str) -> PlaylistRespons
     return PlaylistResponse(user_prompt=user_prompt, songs=parsed["songs"])
 
 
-def generate_playlist(user_prompt: str) -> PlaylistResponse:
+def generate_playlist(user_prompt: str) -> tuple[PlaylistResponse, str]:
     if not settings.replicate_api_token:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -98,4 +98,4 @@ def generate_playlist(user_prompt: str) -> PlaylistResponse:
         ) from None
 
     raw_text = _extract_text_output(output)
-    return _parse_playlist_response(user_prompt=user_prompt, raw_text=raw_text)
+    return _parse_playlist_response(user_prompt=user_prompt, raw_text=raw_text), llm_prompt
