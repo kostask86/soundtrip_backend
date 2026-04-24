@@ -19,10 +19,11 @@ def main() -> None:
     processes: list[subprocess.Popen] = []
     try:
         # Broker (Redis by default)
-        broker_cmd = shlex.split(settings.celery_broker_command)
-        if not broker_cmd:
-            raise RuntimeError("CELERY_BROKER_COMMAND is empty")
-        processes.append(_spawn(broker_cmd))
+        broker_cmd = shlex.split(settings.celery_broker_command or "")
+        if broker_cmd:
+            processes.append(_spawn(broker_cmd))
+        else:
+            print("CELERY_BROKER_COMMAND is empty; assuming external broker is already running.")
 
         # Celery worker
         processes.append(
@@ -52,8 +53,7 @@ def main() -> None:
                     "-A",
                     "app.worker.celery_app.celery_app",
                     "flower",
-                    "--port",
-                    str(settings.celery_flower_port),
+                    f"--port={settings.celery_flower_port}",
                 ]
             )
         )

@@ -36,6 +36,8 @@ This starts:
 - Flower UI (`http://localhost:5555` by default)
 - FastAPI app (`http://localhost:8000`)
 
+If `CELERY_BROKER_COMMAND` is empty, `run.py` assumes an external broker is already running (for example Redis in Docker).
+
 ## OpenAPI
 
 - Generated OpenAPI spec file: `openapi.json`
@@ -105,3 +107,16 @@ When completed, the response includes `playlist_id` and `playlist`.
 
 - Flower dashboard: `http://localhost:5555`
 - You can inspect tasks, states, runtime, and failures there.
+
+## Queue Runtime Troubleshooting
+
+- `RuntimeError: CELERY_BROKER_COMMAND is empty`
+  - Set `CELERY_BROKER_COMMAND` to a Redis executable path, or leave it empty and run Redis externally (Docker/service).
+
+- `tornado.options.Error: Option 'port' requires a value`
+  - `CELERY_FLOWER_PORT` is missing/empty. Set it to a number, e.g.:
+  - `CELERY_FLOWER_PORT=5555`
+
+- API and worker run but Flower fails
+  - Queue processing still works; only Flower UI is down.
+  - Fix `CELERY_FLOWER_PORT`, restart `python run.py`, then open `http://localhost:5555`.
