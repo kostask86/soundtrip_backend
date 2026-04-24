@@ -1442,12 +1442,54 @@
           "required": true
         },
         "responses": {
-          "201": {
+          "202": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlaylistStoredRead"
+                  "$ref": "#/components/schemas/PlaylistGenerationJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/playlists/jobs/{job_id}": {
+      "get": {
+        "tags": [
+          "playlists"
+        ],
+        "summary": "Get Playlist Generation Job",
+        "operationId": "get_playlist_generation_job_api_v1_playlists_jobs__job_id__get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistJobStatusResponse"
                 }
               }
             }
@@ -2098,6 +2140,17 @@
             "minLength": 5,
             "title": "User Prompt"
           },
+          "llm_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Prompt"
+          },
           "songs": {
             "items": {
               "$ref": "#/components/schemas/PlaylistSong-Input"
@@ -2145,6 +2198,24 @@
           "confidence"
         ],
         "title": "PlaylistEmotion"
+      },
+      "PlaylistGenerationJobResponse": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id",
+          "status"
+        ],
+        "title": "PlaylistGenerationJobResponse"
       },
       "PlaylistGeography": {
         "properties": {
@@ -2216,6 +2287,56 @@
           "confidence"
         ],
         "title": "PlaylistInfluence"
+      },
+      "PlaylistJobStatusResponse": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "playlist_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Playlist Id"
+          },
+          "playlist": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlaylistStoredRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id",
+          "status"
+        ],
+        "title": "PlaylistJobStatusResponse"
       },
       "PlaylistRequest": {
         "properties": {
@@ -2353,6 +2474,17 @@
             "type": "string",
             "title": "User Prompt"
           },
+          "llm_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Prompt"
+          },
           "songs": {
             "items": {
               "$ref": "#/components/schemas/PlaylistSong-Output"
@@ -2376,6 +2508,7 @@
           "id",
           "title",
           "user_prompt",
+          "llm_prompt",
           "songs",
           "created_at",
           "updated_at"
@@ -2452,6 +2585,17 @@
             "maxLength": 2000,
             "minLength": 5,
             "title": "User Prompt"
+          },
+          "llm_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Prompt"
           },
           "songs": {
             "items": {

@@ -83,3 +83,16 @@ class PlaylistStoredRead(BaseModel):
     songs: list[PlaylistSong]
     created_at: datetime
     updated_at: datetime
+
+
+class PlaylistGenerationJobResponse(BaseModel):
+    job_id: str
+    status: str
+
+
+class PlaylistJobStatusResponse(BaseModel):
+    job_id: str
+    status: str
+    playlist_id: int | None = None
+    playlist: PlaylistStoredRead | None = None
+    error: str | None = None

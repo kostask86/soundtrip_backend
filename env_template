@@ -7,3 +7,15 @@ DATABASE_URL=sqlite+aiosqlite:///./soundtrip.db
 # LLM inference token
 REPLICATE_API_TOKEN=the_replicate_key
 REPLICATE_MODEL=google/gemini-3-pro
+
+# Celery / Queue
+CELERY_BROKER_URL=redis://localhost:6379/0
+CELERY_RESULT_BACKEND=redis://localhost:6379/0
+CELERY_QUEUE_NAME=playlist_generation
+CELERY_FLOWER_PORT=5555
+CELERY_BROKER_COMMAND=redis-server
+
+# API process settings used by run.py
+API_HOST=0.0.0.0
+API_PORT=8000
+API_RELOAD=false

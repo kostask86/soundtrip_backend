@@ -1,23 +1,46 @@
+from celery.result import AsyncResult
 from fastapi import APIRouter, HTTPException, Query, status
 
 from app.api.deps import SessionDep
-from app.schemas.playlist import PlaylistCreate, PlaylistRequest, PlaylistStoredRead, PlaylistUpdate
-from app.services.playlist_generator import generate_playlist
+from app.core.config import settings
+from app.schemas.playlist import (
+    PlaylistCreate,
+    PlaylistGenerationJobResponse,
+    PlaylistJobStatusResponse,
+    PlaylistRequest,
+    PlaylistStoredRead,
+    PlaylistUpdate,
+)
 from app.services.playlists import create_playlist, delete_playlist, get_playlist, list_playlists, update_playlist
+from app.worker.celery_app import celery_app
+from app.worker.tasks import generate_playlist_task
 
 router = APIRouter(prefix="/playlists", tags=["playlists"])
 
 
-@router.post("/generate", response_model=PlaylistStoredRead, status_code=status.HTTP_201_CREATED)
-def generate_playlist_from_prompt(db: SessionDep, payload: PlaylistRequest) -> PlaylistStoredRead:
-    generated, llm_prompt = generate_playlist(user_prompt=payload.prompt)
-    create_payload = PlaylistCreate(
-        title=None,
-        user_prompt=generated.user_prompt,
-        llm_prompt=llm_prompt,
-        songs=generated.songs,
+@router.post("/generate", response_model=PlaylistGenerationJobResponse, status_code=status.HTTP_202_ACCEPTED)
+def generate_playlist_from_prompt(payload: PlaylistRequest) -> PlaylistGenerationJobResponse:
+    task = generate_playlist_task.apply_async(
+        args=[payload.prompt],
+        queue=settings.celery_queue_name,
     )
-    return create_playlist(db, create_payload)
+    return PlaylistGenerationJobResponse(job_id=task.id, status="queued")
+
+
+@router.get("/jobs/{job_id}", response_model=PlaylistJobStatusResponse)
+def get_playlist_generation_job(db: SessionDep, job_id: str) -> PlaylistJobStatusResponse:
+    result = AsyncResult(job_id, app=celery_app)
+    status_value = (result.status or "PENDING").lower()
+    response = PlaylistJobStatusResponse(job_id=job_id, status=status_value)
+    if status_value == "success":
+        payload = result.result if isinstance(result.result, dict) else {}
+        playlist_id = payload.get("playlist_id")
+        response.playlist_id = playlist_id
+        if isinstance(playlist_id, int):
+            response.playlist = get_playlist(db, playlist_id)
+    elif status_value in {"failure", "revoked"}:
+        response.error = str(result.result)
+    return response
 
 
 @router.post("", response_model=PlaylistStoredRead, status_code=status.HTTP_201_CREATED)

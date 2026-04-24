@@ -1,7 +1,10 @@
 alembic==1.15.2
+celery
 fastapi==0.115.12
+flower
 pydantic==2.11.3
 pydantic-settings==2.8.1
 replicate==1.0.7
+redis
 sqlalchemy==2.0.40
 uvicorn[standard]==0.34.0
