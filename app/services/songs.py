@@ -1,7 +1,10 @@
 import json
+import ssl
+from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
+import certifi
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -48,8 +51,26 @@ def _http_json(url: str) -> dict:
     req = Request(url)
     req.add_header("User-Agent", USER_AGENT)
     req.add_header("Accept", "application/json")
-    with urlopen(req, timeout=20) as response:
-        return json.loads(response.read().decode("utf-8"))
+    ssl_context = ssl.create_default_context(cafile=certifi.where())
+    try:
+        with urlopen(req, timeout=20, context=ssl_context) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except HTTPError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"MusicBrainz HTTP error: {exc.code}",
+        ) from None
+    except URLError as exc:
+        reason = str(exc.reason)
+        if "CERTIFICATE_VERIFY_FAILED" in reason:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="TLS certificate verification failed while calling MusicBrainz",
+            ) from None
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Network error while calling MusicBrainz: {reason}",
+        ) from None
 
 
 def _first_release_data(recording: dict) -> dict:

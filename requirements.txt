@@ -1,5 +1,6 @@
 alembic==1.15.2
 celery
+certifi
 fastapi==0.115.12
 flower
 pydantic==2.11.3
