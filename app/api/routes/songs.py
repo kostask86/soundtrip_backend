@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError
 
 from app.api.deps import SessionDep
-from app.schemas.song import SongCreate, SongRead, SongUpdate
+from app.schemas.song import SongCreate, SongMetadataApplyRequest, SongMetadataSearchResponse, SongRead, SongUpdate
 from app.services import songs
 
 router = APIRouter(prefix="/songs", tags=["songs"])
@@ -51,3 +51,25 @@ def delete_song(db: SessionDep, song_id: int) -> None:
     if song is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Song not found")
     songs.delete_song(db, song)
+
+
+@router.post("/{song_id}/metadata/search", response_model=SongMetadataSearchResponse)
+def search_song_metadata(db: SessionDep, song_id: int) -> SongMetadataSearchResponse:
+    song = songs.get_song(db, song_id)
+    if song is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Song not found")
+    candidates = songs.search_musicbrainz_candidates(song, limit=10)
+    return SongMetadataSearchResponse(
+        song_id=song_id,
+        query=f'{song.title} - {song.artist}',
+        candidates=candidates,
+    )
+
+
+@router.post("/{song_id}/metadata/apply", response_model=SongRead)
+def apply_song_metadata(db: SessionDep, song_id: int, payload: SongMetadataApplyRequest) -> SongRead:
+    song = songs.get_song(db, song_id)
+    if song is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Song not found")
+    updated = songs.apply_musicbrainz_metadata(db, song, payload)
+    return SongRead.model_validate(updated)
