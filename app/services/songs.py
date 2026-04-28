@@ -96,6 +96,8 @@ def _candidate_from_recording(recording: dict) -> SongMetadataCandidate:
         release_date=release.get("date"),
         release_group_mbid=release_group_mbid,
         release_group_title=release_group.get("title"),
+        duration_seconds=_duration_seconds_from_recording(recording),
+        language=_language_from_release_payload(release),
         cover_url_preview=cover_preview,
     )
 
@@ -143,6 +145,21 @@ def _recording_artist(recording_payload: dict) -> str | None:
     return artist_credits[0].get("name") if artist_credits else None
 
 
+def _duration_seconds_from_recording(recording_payload: dict) -> int | None:
+    length_ms = recording_payload.get("length")
+    if not isinstance(length_ms, int) or length_ms <= 0:
+        return None
+    return int(round(length_ms / 1000))
+
+
+def _language_from_release_payload(release_payload: dict) -> str | None:
+    text_representation = release_payload.get("text-representation", {})
+    language = text_representation.get("language")
+    if isinstance(language, str) and language and language.lower() != "zxx":
+        return language.lower()
+    return None
+
+
 def apply_musicbrainz_metadata(db: Session, song: Song, payload: SongMetadataApplyRequest) -> Song:
     if payload.auto:
         candidate = _pick_auto_candidate(song, payload.min_score)
@@ -170,10 +187,12 @@ def apply_musicbrainz_metadata(db: Session, song: Song, payload: SongMetadataApp
 
     album_title = None
     release_year = None
+    release_language = None
     if release_mbid:
         release_url = f"{MB_BASE}/release/{release_mbid}?fmt=json"
         release_payload = _http_json(release_url)
         album_title = release_payload.get("title")
+        release_language = _language_from_release_payload(release_payload)
         date_raw = release_payload.get("date", "")
         if len(date_raw) >= 4 and date_raw[:4].isdigit():
             release_year = int(date_raw[:4])
@@ -181,11 +200,14 @@ def apply_musicbrainz_metadata(db: Session, song: Song, payload: SongMetadataApp
             release_group_mbid = release_payload.get("release-group", {}).get("id")
 
     cover_url = _cover_url_for(release_mbid, release_group_mbid)
+    duration_seconds = _duration_seconds_from_recording(recording)
 
     _set_if(song, "mb_recording_mbid", recording_mbid, payload.overwrite)
     _set_if(song, "mb_release_mbid", release_mbid, payload.overwrite)
     _set_if(song, "mb_release_group_mbid", release_group_mbid, payload.overwrite)
     _set_if(song, "album", album_title, payload.overwrite)
+    _set_if(song, "duration_seconds", duration_seconds, payload.overwrite)
+    _set_if(song, "language", release_language, payload.overwrite)
     _set_if(song, "release_year", release_year, payload.overwrite)
     _set_if(song, "album_cover_url", cover_url, payload.overwrite)
     _set_if(song, "artist", _recording_artist(recording), payload.overwrite)

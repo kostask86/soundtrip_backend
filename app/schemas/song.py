@@ -71,6 +71,8 @@ class SongMetadataCandidate(BaseModel):
     release_date: str | None = None
     release_group_mbid: str | None = None
     release_group_title: str | None = None
+    duration_seconds: int | None = None
+    language: str | None = None
     cover_url_preview: str | None = None
 
 
