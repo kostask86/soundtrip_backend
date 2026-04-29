@@ -36,7 +36,10 @@ def get_playlist_generation_job(db: SessionDep, job_id: str) -> PlaylistJobStatu
         payload = result.result if isinstance(result.result, dict) else {}
         playlist_id = payload.get("playlist_id")
         response.playlist_id = playlist_id
-        if isinstance(playlist_id, int):
+        playlist_payload = payload.get("playlist")
+        if isinstance(playlist_payload, dict):
+            response.playlist = PlaylistStoredRead.model_validate(playlist_payload)
+        elif isinstance(playlist_id, int):
             response.playlist = get_playlist(db, playlist_id)
     elif status_value in {"failure", "revoked"}:
         response.error = str(result.result)

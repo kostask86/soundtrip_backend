@@ -19,6 +19,6 @@ def generate_playlist_task(user_prompt: str) -> dict:
                 songs=generated.songs,
             ),
         )
-        return {"playlist_id": created.id}
+        return {"playlist_id": created.id, "playlist": created.model_dump(mode="json")}
     finally:
         db.close()
