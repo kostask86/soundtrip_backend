@@ -151,15 +151,11 @@ def _extract_playlist_songs(db: Session, playlist_id: int, fallback_songs_json: 
                 song_payload["song_id"] = link.song_id
                 song_payload["position"] = link.position
                 song_payload["album"] = row.album
-                song_payload["mb_recording_mbid"] = row.mb_recording_mbid
-                song_payload["mb_release_mbid"] = row.mb_release_mbid
-                song_payload["mb_release_group_mbid"] = row.mb_release_group_mbid
                 song_payload["album_cover_url"] = row.album_cover_url
                 song_payload["release_year"] = row.release_year
                 song_payload["duration_seconds"] = row.duration_seconds
                 song_payload["language"] = row.language
                 song_payload["lyrics_text"] = row.lyrics_text
-                song_payload["lyrics_language"] = row.lyrics_language
                 song_payload["notes"] = row.notes
                 song_payload["time_period_id"] = row.time_period_id
                 song_payload["primary_geography_id"] = row.primary_geography_id
@@ -175,15 +171,11 @@ def _extract_playlist_songs(db: Session, playlist_id: int, fallback_songs_json: 
                 "title": row.title,
                 "artist": row.artist,
                 "album": row.album,
-                "mb_recording_mbid": row.mb_recording_mbid,
-                "mb_release_mbid": row.mb_release_mbid,
-                "mb_release_group_mbid": row.mb_release_group_mbid,
                 "album_cover_url": row.album_cover_url,
                 "release_year": row.release_year,
                 "duration_seconds": row.duration_seconds,
                 "language": row.language,
                 "lyrics_text": row.lyrics_text,
-                "lyrics_language": row.lyrics_language,
                 "notes": row.notes,
                 "time_period_id": row.time_period_id,
                 "primary_geography_id": row.primary_geography_id,

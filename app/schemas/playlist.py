@@ -52,15 +52,11 @@ class PlaylistSong(BaseModel):
     title: str
     artist: str
     album: str | None = None
-    mb_recording_mbid: str | None = None
-    mb_release_mbid: str | None = None
-    mb_release_group_mbid: str | None = None
     album_cover_url: str | None = None
     release_year: int | None = None
     duration_seconds: int | None = None
     language: str | None = None
     lyrics_text: str | None = None
-    lyrics_language: str | None = None
     notes: str | None = None
     time_period_id: int | None = None
     primary_geography_id: int | None = None

@@ -17,5 +17,9 @@ CELERY_BROKER_COMMAND=redis-server
 
 # API process settings used by run.py
 API_HOST=0.0.0.0
-API_PORT=8000
+API_PORT=8001
 API_RELOAD=false
+
+# Spotify API credentials
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret

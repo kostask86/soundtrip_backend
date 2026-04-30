@@ -1,7 +1,8 @@
 import json
 import ssl
+from base64 import b64encode
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 import certifi
@@ -9,11 +10,12 @@ from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.models.tables import Song
-from app.schemas.song import SongCreate, SongMetadataApplyRequest, SongMetadataCandidate, SongUpdate
+from app.schemas.song import SongCreate, SongUpdate
 
-MB_BASE = "https://musicbrainz.org/ws/2"
-CAA_BASE = "https://coverartarchive.org"
+SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
+SPOTIFY_SEARCH_URL = "https://api.spotify.com/v1/search"
 USER_AGENT = "soundtrip-backend/1.0 (local-dev)"
 
 
@@ -47,77 +49,6 @@ def delete_song(db: Session, song: Song) -> None:
     db.commit()
 
 
-def _http_json(url: str) -> dict:
-    req = Request(url)
-    req.add_header("User-Agent", USER_AGENT)
-    req.add_header("Accept", "application/json")
-    ssl_context = ssl.create_default_context(cafile=certifi.where())
-    try:
-        with urlopen(req, timeout=20, context=ssl_context) as response:
-            return json.loads(response.read().decode("utf-8"))
-    except HTTPError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_502_BAD_GATEWAY,
-            detail=f"MusicBrainz HTTP error: {exc.code}",
-        ) from None
-    except URLError as exc:
-        reason = str(exc.reason)
-        if "CERTIFICATE_VERIFY_FAILED" in reason:
-            raise HTTPException(
-                status_code=status.HTTP_502_BAD_GATEWAY,
-                detail="TLS certificate verification failed while calling MusicBrainz",
-            ) from None
-        raise HTTPException(
-            status_code=status.HTTP_502_BAD_GATEWAY,
-            detail=f"Network error while calling MusicBrainz: {reason}",
-        ) from None
-
-
-def _first_release_data(recording: dict) -> dict:
-    releases = recording.get("releases", [])
-    return releases[0] if releases else {}
-
-
-def _candidate_from_recording(recording: dict) -> SongMetadataCandidate:
-    release = _first_release_data(recording)
-    release_group = release.get("release-group", {})
-    artist_credits = recording.get("artist-credit", [])
-    artist_name = artist_credits[0].get("name", "") if artist_credits else ""
-    release_mbid = release.get("id")
-    release_group_mbid = release_group.get("id")
-    cover_preview = f"{CAA_BASE}/release/{release_mbid}/front-250" if release_mbid else None
-    return SongMetadataCandidate(
-        recording_mbid=recording.get("id", ""),
-        recording_title=recording.get("title", ""),
-        artist_name=artist_name,
-        score=int(recording.get("score", 0)),
-        release_mbid=release_mbid,
-        release_title=release.get("title"),
-        release_date=release.get("date"),
-        release_group_mbid=release_group_mbid,
-        release_group_title=release_group.get("title"),
-        duration_seconds=_duration_seconds_from_recording(recording),
-        language=_language_from_release_payload(release),
-        cover_url_preview=cover_preview,
-    )
-
-
-def search_musicbrainz_candidates(song: Song, limit: int = 10) -> list[SongMetadataCandidate]:
-    query = f'recording:"{song.title}" AND artist:"{song.artist}"'
-    url = f"{MB_BASE}/recording?query={quote(query)}&fmt=json&limit={limit}"
-    payload = _http_json(url)
-    recordings = payload.get("recordings", [])
-    return [_candidate_from_recording(recording) for recording in recordings]
-
-
-def _cover_url_for(release_mbid: str | None, release_group_mbid: str | None) -> str | None:
-    if release_mbid:
-        return f"{CAA_BASE}/release/{release_mbid}/front"
-    if release_group_mbid:
-        return f"{CAA_BASE}/release-group/{release_group_mbid}/front"
-    return None
-
-
 def _set_if(song: Song, field: str, value, overwrite: bool) -> None:
     if value is None:
         return
@@ -126,91 +57,87 @@ def _set_if(song: Song, field: str, value, overwrite: bool) -> None:
         setattr(song, field, value)
 
 
-def _pick_auto_candidate(song: Song, min_score: int) -> SongMetadataCandidate:
-    candidates = search_musicbrainz_candidates(song, limit=10)
-    if not candidates:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No MusicBrainz candidates found")
-    filtered = [c for c in candidates if c.score >= min_score]
-    if not filtered:
+def _spotify_token() -> str:
+    client_id = settings.spotify_client_id.strip()
+    client_secret = settings.spotify_client_secret.strip()
+    if not client_id or not client_secret:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"No candidate passed min_score={min_score}",
+            detail="Spotify credentials are missing. Set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET.",
         )
-    filtered.sort(key=lambda c: c.score, reverse=True)
-    return filtered[0]
+    auth = b64encode(f"{client_id}:{client_secret}".encode("utf-8")).decode("utf-8")
+    body = urlencode({"grant_type": "client_credentials"}).encode("utf-8")
+    req = Request(SPOTIFY_TOKEN_URL, data=body, method="POST")
+    req.add_header("Authorization", f"Basic {auth}")
+    req.add_header("Content-Type", "application/x-www-form-urlencoded")
+    req.add_header("Accept", "application/json")
+    ssl_context = ssl.create_default_context(cafile=certifi.where())
+    try:
+        with urlopen(req, timeout=20, context=ssl_context) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except HTTPError as exc:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"Spotify token error: {exc.code}") from None
+    except URLError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Network error while calling Spotify token endpoint: {exc.reason}",
+        ) from None
+    token = payload.get("access_token")
+    if not isinstance(token, str) or not token:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail="Spotify token response missing access_token")
+    return token
 
 
-def _recording_artist(recording_payload: dict) -> str | None:
-    artist_credits = recording_payload.get("artist-credit", [])
-    return artist_credits[0].get("name") if artist_credits else None
+def _spotify_track(song: Song) -> dict:
+    token = _spotify_token()
+    query = f'track:"{song.title}" artist:"{song.artist}"'
+    url = f"{SPOTIFY_SEARCH_URL}?{urlencode({'q': query, 'type': 'track', 'limit': 1})}"
+    req = Request(url)
+    req.add_header("Authorization", f"Bearer {token}")
+    req.add_header("Accept", "application/json")
+    req.add_header("User-Agent", USER_AGENT)
+    ssl_context = ssl.create_default_context(cafile=certifi.where())
+    try:
+        with urlopen(req, timeout=20, context=ssl_context) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except HTTPError as exc:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"Spotify search error: {exc.code}") from None
+    except URLError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Network error while calling Spotify search endpoint: {exc.reason}",
+        ) from None
+    items = payload.get("tracks", {}).get("items", [])
+    if not items:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No Spotify track found for this song")
+    return items[0]
 
 
-def _duration_seconds_from_recording(recording_payload: dict) -> int | None:
-    length_ms = recording_payload.get("length")
-    if not isinstance(length_ms, int) or length_ms <= 0:
+def _release_year(date_raw: str | None) -> int | None:
+    if not isinstance(date_raw, str):
         return None
-    return int(round(length_ms / 1000))
-
-
-def _language_from_release_payload(release_payload: dict) -> str | None:
-    text_representation = release_payload.get("text-representation", {})
-    language = text_representation.get("language")
-    if isinstance(language, str) and language and language.lower() != "zxx":
-        return language.lower()
+    if len(date_raw) >= 4 and date_raw[:4].isdigit():
+        return int(date_raw[:4])
     return None
 
 
-def apply_musicbrainz_metadata(db: Session, song: Song, payload: SongMetadataApplyRequest) -> Song:
-    if payload.auto:
-        candidate = _pick_auto_candidate(song, payload.min_score)
-        recording_mbid = candidate.recording_mbid
-        release_mbid = payload.release_mbid or candidate.release_mbid
-        release_group_mbid = payload.release_group_mbid or candidate.release_group_mbid
-    else:
-        if not payload.recording_mbid:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="recording_mbid is required when auto=false",
-            )
-        recording_mbid = payload.recording_mbid
-        release_mbid = payload.release_mbid
-        release_group_mbid = payload.release_group_mbid
+def apply_spotify_metadata(db: Session, song: Song) -> Song:
+    track = _spotify_track(song)
+    album = track.get("album", {}) if isinstance(track.get("album"), dict) else {}
+    images = album.get("images", []) if isinstance(album.get("images"), list) else []
+    cover_url = None
+    if images and isinstance(images[0], dict):
+        cover_url = images[0].get("url")
 
-    recording_url = f"{MB_BASE}/recording/{recording_mbid}?fmt=json&inc=releases+artists"
-    recording = _http_json(recording_url)
+    album_title = album.get("name")
+    duration_ms = track.get("duration_ms")
+    duration_seconds = int(round(duration_ms / 1000)) if isinstance(duration_ms, int) and duration_ms > 0 else None
+    release_year = _release_year(album.get("release_date"))
 
-    if not release_mbid:
-        first_release = _first_release_data(recording)
-        release_mbid = first_release.get("id")
-        if not release_group_mbid:
-            release_group_mbid = first_release.get("release-group", {}).get("id")
-
-    album_title = None
-    release_year = None
-    release_language = None
-    if release_mbid:
-        release_url = f"{MB_BASE}/release/{release_mbid}?fmt=json"
-        release_payload = _http_json(release_url)
-        album_title = release_payload.get("title")
-        release_language = _language_from_release_payload(release_payload)
-        date_raw = release_payload.get("date", "")
-        if len(date_raw) >= 4 and date_raw[:4].isdigit():
-            release_year = int(date_raw[:4])
-        if not release_group_mbid:
-            release_group_mbid = release_payload.get("release-group", {}).get("id")
-
-    cover_url = _cover_url_for(release_mbid, release_group_mbid)
-    duration_seconds = _duration_seconds_from_recording(recording)
-
-    _set_if(song, "mb_recording_mbid", recording_mbid, payload.overwrite)
-    _set_if(song, "mb_release_mbid", release_mbid, payload.overwrite)
-    _set_if(song, "mb_release_group_mbid", release_group_mbid, payload.overwrite)
-    _set_if(song, "album", album_title, payload.overwrite)
-    _set_if(song, "duration_seconds", duration_seconds, payload.overwrite)
-    _set_if(song, "language", release_language, payload.overwrite)
-    _set_if(song, "release_year", release_year, payload.overwrite)
-    _set_if(song, "album_cover_url", cover_url, payload.overwrite)
-    _set_if(song, "artist", _recording_artist(recording), payload.overwrite)
+    _set_if(song, "album", album_title, True)
+    _set_if(song, "album_cover_url", cover_url, True)
+    _set_if(song, "duration_seconds", duration_seconds, True)
+    _set_if(song, "release_year", release_year, True)
 
     db.commit()
     db.refresh(song)
