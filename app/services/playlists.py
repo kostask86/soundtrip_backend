@@ -159,6 +159,7 @@ def _extract_playlist_songs(db: Session, playlist_id: int, fallback_songs_json: 
                 song_payload["notes"] = row.notes
                 song_payload["time_period_id"] = row.time_period_id
                 song_payload["primary_geography_id"] = row.primary_geography_id
+                song_payload["location"] = row.location
                 song_payload["created_at"] = row.created_at
                 songs.append(song_payload)
                 continue
@@ -179,6 +180,7 @@ def _extract_playlist_songs(db: Session, playlist_id: int, fallback_songs_json: 
                 "notes": row.notes,
                 "time_period_id": row.time_period_id,
                 "primary_geography_id": row.primary_geography_id,
+                "location": row.location,
                 "created_at": row.created_at,
                 "styles": [],
                 "emotions": [],

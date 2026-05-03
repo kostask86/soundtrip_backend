@@ -89,6 +89,7 @@ class Song(Base):
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     time_period_id: Mapped[int | None] = mapped_column(ForeignKey("time_periods.id"), nullable=True)
     primary_geography_id: Mapped[int | None] = mapped_column(ForeignKey("geographies.id"), nullable=True)
+    location: Mapped[str | None] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
 
