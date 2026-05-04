@@ -4,6 +4,7 @@
     "Given the user's playlist request, produce ONLY valid JSON with this shape:",
     "{ \"songs\": [<song objects>] }",
     "Each song object MUST follow the exact structure of the provided example_song.",
+    "Each song MUST include \"city\" and \"country\" as short strings: best-effort public-knowledge origin for the performing artist or act (birthplace, hometown, or primary base)—not inferred from the song title alone.",
     "Use only IDs that exist in ontology values below.",
     "Return no markdown, no explanations, no extra keys.",
     "Output between 3 and 10 songs depending on request if not explicit.",

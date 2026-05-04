@@ -663,6 +663,8 @@
     "example_song": {
       "title": "All Along the Watchtower",
       "artist": "The Jimi Hendrix Experience",
+      "city": "London",
+      "country": "United Kingdom",
       "styles": [
         {
           "id": "psychedelic_rock",

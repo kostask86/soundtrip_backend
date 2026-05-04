@@ -25,7 +25,6 @@ class Settings(BaseSettings):
     api_reload: bool = False
     spotify_client_id: str = ""
     spotify_client_secret: str = ""
-    musicbrainz_contact_url: str = "https://github.com/soundtrip/soundtrip_backend"
 
     @property
     def sqlalchemy_database_url(self) -> str:

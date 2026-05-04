@@ -16,20 +16,7 @@ from app.schemas.song import SongCreate, SongUpdate
 
 SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
 SPOTIFY_SEARCH_URL = "https://api.spotify.com/v1/search"
-MUSICBRAINZ_ARTIST_SEARCH_URL = "https://musicbrainz.org/ws/2/artist"
 USER_AGENT = "soundtrip-backend/1.0 (local-dev)"
-
-
-def _musicbrainz_user_agent() -> str:
-    contact = settings.musicbrainz_contact_url.strip()
-    if not contact:
-        contact = "https://github.com/soundtrip/soundtrip_backend"
-    return f"soundtrip-backend/1.0 ({contact})"
-
-
-def _escape_lucene_artist_phrase(artist: str) -> str:
-    """Escape backslashes and double quotes for a Lucene phrase inside artist:\"...\"."""
-    return artist.replace("\\", "\\\\").replace('"', '\\"')
 
 
 def create_song(db: Session, payload: SongCreate) -> Song:
@@ -134,45 +121,6 @@ def _release_year(date_raw: str | None) -> int | None:
     return None
 
 
-def _musicbrainz_artist_begin_area(artist: str) -> str | None:
-    """Resolve begin-area (city) from MusicBrainz artist search; first hit only if score is 100."""
-    name = artist.strip()
-    if not name:
-        return None
-    lucene = f'artist:"{_escape_lucene_artist_phrase(name)}"'
-    url = f"{MUSICBRAINZ_ARTIST_SEARCH_URL}?{urlencode({'query': lucene, 'fmt': 'json', 'limit': '5'})}"
-    req = Request(url)
-    req.add_header("Accept", "application/json")
-    req.add_header("User-Agent", _musicbrainz_user_agent())
-    ssl_context = ssl.create_default_context(cafile=certifi.where())
-    try:
-        with urlopen(req, timeout=20, context=ssl_context) as response:
-            payload = json.loads(response.read().decode("utf-8"))
-    except HTTPError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_502_BAD_GATEWAY,
-            detail=f"MusicBrainz artist search error: {exc.code}",
-        ) from None
-    except URLError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_502_BAD_GATEWAY,
-            detail=f"Network error while calling MusicBrainz: {exc.reason}",
-        ) from None
-    artists = payload.get("artists")
-    if not isinstance(artists, list) or not artists:
-        return None
-    first = artists[0]
-    if not isinstance(first, dict) or first.get("score") != 100:
-        return None
-    begin = first.get("begin-area")
-    if not isinstance(begin, dict):
-        return None
-    city = begin.get("name")
-    if isinstance(city, str) and city.strip():
-        return city.strip()
-    return None
-
-
 def apply_spotify_metadata(db: Session, song: Song) -> Song:
     track = _spotify_track(song)
     album = track.get("album", {}) if isinstance(track.get("album"), dict) else {}
@@ -190,9 +138,6 @@ def apply_spotify_metadata(db: Session, song: Song) -> Song:
     _set_if(song, "album_cover_url", cover_url, True)
     _set_if(song, "duration_seconds", duration_seconds, True)
     _set_if(song, "release_year", release_year, True)
-
-    # MusicBrainz allows ~1 request/second per client; this path runs after Spotify (single song).
-    song.location = _musicbrainz_artist_begin_area(song.artist)
 
     db.commit()
     db.refresh(song)

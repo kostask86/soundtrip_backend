@@ -33,6 +33,8 @@ def _song_schema_to_song_row(
     return Song(
         title=song.title,
         artist=song.artist,
+        city=song.city,
+        country=song.country,
         time_period_id=time_period.id if time_period else None,
         primary_geography_id=primary_geography.id if primary_geography else None,
         notes=json.dumps(song.model_dump()),
@@ -159,7 +161,8 @@ def _extract_playlist_songs(db: Session, playlist_id: int, fallback_songs_json: 
                 song_payload["notes"] = row.notes
                 song_payload["time_period_id"] = row.time_period_id
                 song_payload["primary_geography_id"] = row.primary_geography_id
-                song_payload["location"] = row.location
+                song_payload["city"] = row.city
+                song_payload["country"] = row.country
                 song_payload["created_at"] = row.created_at
                 songs.append(song_payload)
                 continue

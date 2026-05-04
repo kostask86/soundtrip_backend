@@ -46,5 +46,6 @@ class SongRead(BaseModel):
     notes: str | None
     time_period_id: int | None
     primary_geography_id: int | None
-    location: str | None = None
+    city: str | None = None
+    country: str | None = None
     created_at: datetime

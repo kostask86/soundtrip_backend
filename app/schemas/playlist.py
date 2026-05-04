@@ -51,6 +51,8 @@ class PlaylistSong(BaseModel):
     position: int | None = None
     title: str
     artist: str
+    city: str | None = None
+    country: str | None = None
     album: str | None = None
     album_cover_url: str | None = None
     release_year: int | None = None
