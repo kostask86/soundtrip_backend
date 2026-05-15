@@ -254,48 +254,6 @@
         }
       }
     },
-    "/api/v1/songs/{song_id}/metadata/search": {
-      "post": {
-        "tags": [
-          "songs"
-        ],
-        "summary": "Search Song Metadata",
-        "operationId": "search_song_metadata_api_v1_songs__song_id__metadata_search_post",
-        "parameters": [
-          {
-            "name": "song_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Song Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SongMetadataSearchResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/songs/{song_id}/metadata/apply": {
       "post": {
         "tags": [
@@ -314,16 +272,6 @@
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SongMetadataApplyRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -1559,6 +1507,47 @@
         }
       }
     },
+    "/api/v1/playlists/generate/similar": {
+      "post": {
+        "tags": [
+          "playlists"
+        ],
+        "summary": "Generate Similar Songs From Anchor",
+        "operationId": "generate_similar_songs_from_anchor_api_v1_playlists_generate_similar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimilarSongsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaylistGenerationJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/playlists/jobs/{job_id}": {
       "get": {
         "tags": [
@@ -2449,6 +2438,28 @@
       },
       "PlaylistSong-Input": {
         "properties": {
+          "song_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Song Id"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position"
+          },
           "title": {
             "type": "string",
             "title": "Title"
@@ -2456,6 +2467,139 @@
           "artist": {
             "type": "string",
             "title": "Artist"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country"
+          },
+          "album": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Album"
+          },
+          "album_cover_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Album Cover Url"
+          },
+          "release_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Release Year"
+          },
+          "duration_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Seconds"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "lyrics_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lyrics Text"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "time_period_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time Period Id"
+          },
+          "primary_geography_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary Geography Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
           },
           "styles": {
             "items": {
@@ -2499,6 +2643,28 @@
       },
       "PlaylistSong-Output": {
         "properties": {
+          "song_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Song Id"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position"
+          },
           "title": {
             "type": "string",
             "title": "Title"
@@ -2506,6 +2672,139 @@
           "artist": {
             "type": "string",
             "title": "Artist"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country"
+          },
+          "album": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Album"
+          },
+          "album_cover_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Album Cover Url"
+          },
+          "release_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Release Year"
+          },
+          "duration_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Seconds"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "lyrics_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lyrics Text"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "time_period_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time Period Id"
+          },
+          "primary_geography_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary Geography Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
           },
           "styles": {
             "items": {
@@ -2706,6 +3005,28 @@
         ],
         "title": "PlaylistUpdate"
       },
+      "SimilarSongsRequest": {
+        "properties": {
+          "song_id": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Song Id"
+          },
+          "count": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Count",
+            "description": "Number of similar songs to generate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "song_id",
+          "count"
+        ],
+        "title": "SimilarSongsRequest"
+      },
       "SongCreate": {
         "properties": {
           "title": {
@@ -2731,42 +3052,6 @@
               }
             ],
             "title": "Album"
-          },
-          "mb_recording_mbid": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 64
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Mb Recording Mbid"
-          },
-          "mb_release_mbid": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 64
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Mb Release Mbid"
-          },
-          "mb_release_group_mbid": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 64
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Mb Release Group Mbid"
           },
           "album_cover_url": {
             "anyOf": [
@@ -2826,18 +3111,6 @@
               }
             ],
             "title": "Lyrics Text"
-          },
-          "lyrics_language": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 80
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Lyrics Language"
           },
           "notes": {
             "anyOf": [
@@ -2880,204 +3153,6 @@
         ],
         "title": "SongCreate"
       },
-      "SongMetadataApplyRequest": {
-        "properties": {
-          "auto": {
-            "type": "boolean",
-            "title": "Auto",
-            "default": true
-          },
-          "overwrite": {
-            "type": "boolean",
-            "title": "Overwrite",
-            "default": true
-          },
-          "recording_mbid": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Recording Mbid"
-          },
-          "release_mbid": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Release Mbid"
-          },
-          "release_group_mbid": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Release Group Mbid"
-          },
-          "min_score": {
-            "type": "integer",
-            "maximum": 100.0,
-            "minimum": 0.0,
-            "title": "Min Score",
-            "default": 60
-          }
-        },
-        "type": "object",
-        "title": "SongMetadataApplyRequest"
-      },
-      "SongMetadataCandidate": {
-        "properties": {
-          "recording_mbid": {
-            "type": "string",
-            "title": "Recording Mbid"
-          },
-          "recording_title": {
-            "type": "string",
-            "title": "Recording Title"
-          },
-          "artist_name": {
-            "type": "string",
-            "title": "Artist Name"
-          },
-          "score": {
-            "type": "integer",
-            "title": "Score"
-          },
-          "release_mbid": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Release Mbid"
-          },
-          "release_title": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Release Title"
-          },
-          "release_date": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Release Date"
-          },
-          "release_group_mbid": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Release Group Mbid"
-          },
-          "release_group_title": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Release Group Title"
-          },
-          "duration_seconds": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Duration Seconds"
-          },
-          "language": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Language"
-          },
-          "cover_url_preview": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Cover Url Preview"
-          }
-        },
-        "type": "object",
-        "required": [
-          "recording_mbid",
-          "recording_title",
-          "artist_name",
-          "score"
-        ],
-        "title": "SongMetadataCandidate"
-      },
-      "SongMetadataSearchResponse": {
-        "properties": {
-          "song_id": {
-            "type": "integer",
-            "title": "Song Id"
-          },
-          "query": {
-            "type": "string",
-            "title": "Query"
-          },
-          "candidates": {
-            "items": {
-              "$ref": "#/components/schemas/SongMetadataCandidate"
-            },
-            "type": "array",
-            "title": "Candidates"
-          }
-        },
-        "type": "object",
-        "required": [
-          "song_id",
-          "query",
-          "candidates"
-        ],
-        "title": "SongMetadataSearchResponse"
-      },
       "SongRead": {
         "properties": {
           "id": {
@@ -3102,39 +3177,6 @@
               }
             ],
             "title": "Album"
-          },
-          "mb_recording_mbid": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Mb Recording Mbid"
-          },
-          "mb_release_mbid": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Mb Release Mbid"
-          },
-          "mb_release_group_mbid": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Mb Release Group Mbid"
           },
           "album_cover_url": {
             "anyOf": [
@@ -3191,17 +3233,6 @@
             ],
             "title": "Lyrics Text"
           },
-          "lyrics_language": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Lyrics Language"
-          },
           "notes": {
             "anyOf": [
               {
@@ -3235,6 +3266,28 @@
             ],
             "title": "Primary Geography Id"
           },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "country": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -3247,15 +3300,11 @@
           "title",
           "artist",
           "album",
-          "mb_recording_mbid",
-          "mb_release_mbid",
-          "mb_release_group_mbid",
           "album_cover_url",
           "release_year",
           "duration_seconds",
           "language",
           "lyrics_text",
-          "lyrics_language",
           "notes",
           "time_period_id",
           "primary_geography_id",
@@ -3288,42 +3337,6 @@
               }
             ],
             "title": "Album"
-          },
-          "mb_recording_mbid": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 64
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Mb Recording Mbid"
-          },
-          "mb_release_mbid": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 64
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Mb Release Mbid"
-          },
-          "mb_release_group_mbid": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 64
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Mb Release Group Mbid"
           },
           "album_cover_url": {
             "anyOf": [
@@ -3383,18 +3396,6 @@
               }
             ],
             "title": "Lyrics Text"
-          },
-          "lyrics_language": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 80
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Lyrics Language"
           },
           "notes": {
             "anyOf": [
