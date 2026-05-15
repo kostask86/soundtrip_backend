@@ -10,10 +10,12 @@ from app.schemas.playlist import (
     PlaylistRequest,
     PlaylistStoredRead,
     PlaylistUpdate,
+    SimilarSongsRequest,
 )
 from app.services.playlists import create_playlist, delete_playlist, get_playlist, list_playlists, update_playlist
+from app.services.songs import get_song
 from app.worker.celery_app import celery_app
-from app.worker.tasks import generate_playlist_task
+from app.worker.tasks import generate_playlist_task, generate_similar_songs_task
 
 router = APIRouter(prefix="/playlists", tags=["playlists"])
 
@@ -22,6 +24,26 @@ router = APIRouter(prefix="/playlists", tags=["playlists"])
 def generate_playlist_from_prompt(payload: PlaylistRequest) -> PlaylistGenerationJobResponse:
     task = generate_playlist_task.apply_async(
         args=[payload.prompt],
+        queue=settings.celery_queue_name,
+    )
+    return PlaylistGenerationJobResponse(job_id=task.id, status="queued")
+
+
+@router.post("/generate/similar", response_model=PlaylistGenerationJobResponse, status_code=status.HTTP_202_ACCEPTED)
+def generate_similar_songs_from_anchor(
+    db: SessionDep,
+    payload: SimilarSongsRequest,
+) -> PlaylistGenerationJobResponse:
+    song = get_song(db, payload.song_id)
+    if song is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Song not found")
+    if not (song.city and str(song.city).strip()):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Song has no city; cannot anchor similar-by-city.",
+        )
+    task = generate_similar_songs_task.apply_async(
+        args=[payload.song_id, payload.count],
         queue=settings.celery_queue_name,
     )
     return PlaylistGenerationJobResponse(job_id=task.id, status="queued")

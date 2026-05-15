@@ -7,6 +7,11 @@ class PlaylistRequest(BaseModel):
     prompt: str = Field(min_length=5, max_length=2000)
 
 
+class SimilarSongsRequest(BaseModel):
+    song_id: int = Field(ge=1)
+    count: int = Field(ge=1, le=50, description="Number of similar songs to generate")
+
+
 class PlaylistStyle(BaseModel):
     id: str
     label: str
