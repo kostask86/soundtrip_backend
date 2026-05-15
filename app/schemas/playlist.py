@@ -1,19 +1,37 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from typing import Self
+
+from pydantic import BaseModel, Field, model_validator
 
 
 class PlaylistRequest(BaseModel):
     prompt: str = Field(min_length=5, max_length=2000)
 
 
+class Timespan(BaseModel):
+    start_year: int = Field(ge=1800, le=3000)
+    end_year: int = Field(ge=1800, le=3000)
+
+    @model_validator(mode="after")
+    def end_not_before_start(self) -> Self:
+        if self.end_year < self.start_year:
+            raise ValueError("end_year must be >= start_year")
+        return self
+
+
 class SimilarSongsRequest(BaseModel):
     song_id: int = Field(ge=1)
     count: int = Field(ge=1, le=50, description="Number of similar songs to generate")
-    radius_km: int = Field(
+    radius_km: int | None = Field(
+        default=None,
         ge=1,
         le=20_000,
-        description="Maximum distance from the anchor city; larger values allow nearby cities and cross-border matches",
+        description="Max distance from anchor city in km; omit to match anchor city and country only",
+    )
+    timespan: Timespan | None = Field(
+        default=None,
+        description="Release year range for similar songs; overrides anchor era when set",
     )
 
 

@@ -3020,18 +3020,35 @@
             "description": "Number of similar songs to generate"
           },
           "radius_km": {
-            "type": "integer",
-            "maximum": 20000.0,
-            "minimum": 1.0,
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 20000.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Radius Km",
-            "description": "Maximum distance from the anchor city; larger values allow nearby cities and cross-border matches"
+            "description": "Max distance from anchor city in km; omit to match anchor city and country only"
+          },
+          "timespan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Timespan"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Release year range for similar songs; overrides anchor era when set"
           }
         },
         "type": "object",
         "required": [
           "song_id",
-          "count",
-          "radius_km"
+          "count"
         ],
         "title": "SimilarSongsRequest"
       },
@@ -3664,6 +3681,28 @@
           "label"
         ],
         "title": "TimePeriodUpdate"
+      },
+      "Timespan": {
+        "properties": {
+          "start_year": {
+            "type": "integer",
+            "maximum": 3000.0,
+            "minimum": 1800.0,
+            "title": "Start Year"
+          },
+          "end_year": {
+            "type": "integer",
+            "maximum": 3000.0,
+            "minimum": 1800.0,
+            "title": "End Year"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start_year",
+          "end_year"
+        ],
+        "title": "Timespan"
       },
       "ValidationError": {
         "properties": {

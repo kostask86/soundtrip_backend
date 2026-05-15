@@ -42,8 +42,9 @@ def generate_similar_songs_from_anchor(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Song has no city; cannot anchor similar-by-city.",
         )
+    timespan_payload = payload.timespan.model_dump() if payload.timespan else None
     task = generate_similar_songs_task.apply_async(
-        args=[payload.song_id, payload.count, payload.radius_km],
+        args=[payload.song_id, payload.count, payload.radius_km, timespan_payload],
         queue=settings.celery_queue_name,
     )
     return PlaylistGenerationJobResponse(job_id=task.id, status="queued")

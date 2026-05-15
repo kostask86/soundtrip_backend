@@ -11,14 +11,35 @@
     "If style or emotion lists are sparse, infer the closest valid ontology tags while staying consistent with the anchor.",
     "Ensure every confidence field is a float between 0 and 1."
   ],
+  "city_country_rules": [
+    "Geographic constraint: every song's artist or act must be strongly associated with the anchor city ({anchor_city}) and country ({anchor_country}). Do not require other cities unless they are clearly part of the same city/metro identity.",
+    "Do not expand to other countries unless the anchor country itself is ambiguous; prefer the anchor city over other cities in the same country."
+  ],
   "radius_rules": [
     "Geographic constraint: every song's artist or act must be plausibly based within approximately {radius_km} km of the anchor city ({anchor_city}, {anchor_country}), using your knowledge of real-world distances between cities.",
     "{radius_scope_hint}",
     "When a candidate city is near the radius limit, prefer slightly inside the radius over clearly outside it; cross-border cities and countries are allowed when they fall within the radius."
   ],
+  "timespan_rules": [
+    "Time constraint: only include songs whose release_year falls between {start_year} and {end_year} inclusive.",
+    "Ignore the anchor song's linked era; use this year range exclusively for temporal matching.",
+    "Set each song's release_year within the range and choose ontology time ids that are consistent with that year range."
+  ],
+  "era_rules": [
+    "Time constraint: match songs to the anchor era {time_label} (ontology time id: {time_id}).",
+    "Set release_year and ontology time ids consistent with that era."
+  ],
+  "release_year_rules": [
+    "Time constraint: only include songs with release_year equal to {release_year}.",
+    "Set ontology time ids consistent with that calendar year."
+  ],
+  "no_time_rules": [
+    "No explicit year range was provided and the anchor has no linked era or release year; infer the closest valid ontology era from each artist while staying stylistically consistent with the anchor."
+  ],
   "sections": {
     "task": "Task (similar songs):",
     "anchor": "Anchor context:",
+    "time_constraint": "Time constraint:",
     "ontology_json": "Ontology JSON:",
     "example_song_structure": "Example song structure:"
   }

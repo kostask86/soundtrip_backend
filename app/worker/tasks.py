@@ -1,6 +1,6 @@
 from app.core.database import SessionLocal
 from app.models.tables import Song
-from app.schemas.playlist import PlaylistCreate
+from app.schemas.playlist import PlaylistCreate, Timespan
 from app.services.playlist_generator import generate_playlist
 from app.services.playlists import create_playlist
 from app.services.similar_songs_generator import generate_similar_songs
@@ -27,11 +27,21 @@ def generate_playlist_task(user_prompt: str) -> dict:
 
 
 @celery_app.task(name="generate_similar_songs_task")
-def generate_similar_songs_task(song_id: int, count: int, radius_km: int) -> dict:
+def generate_similar_songs_task(
+    song_id: int,
+    count: int,
+    radius_km: int | None = None,
+    timespan: dict | None = None,
+) -> dict:
     db = SessionLocal()
     try:
+        timespan_model = Timespan.model_validate(timespan) if timespan else None
         generated, llm_prompt = generate_similar_songs(
-            db, song_id=song_id, count=count, radius_km=radius_km
+            db,
+            song_id=song_id,
+            count=count,
+            radius_km=radius_km,
+            timespan=timespan_model,
         )
         song = db.get(Song, song_id)
         title = f"Similar: {song.title}"[:255] if song is not None else None
