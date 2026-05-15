@@ -1,4 +1,4 @@
-"""Build prompts and call Replicate for 'similar songs in same city' playlists."""
+"""Build prompts and call Replicate for similar-song playlists anchored by city, country, and radius."""
 
 from __future__ import annotations
 
@@ -20,6 +20,24 @@ from app.services.playlist_generator import (
 )
 
 SIMILAR_PROMPT_CONFIG_PATH = Path(__file__).resolve().parents[2] / "scripts" / "similar_songs_prompt_config.json"
+
+
+def geography_scope_hint(radius_km: int) -> str:
+    if radius_km <= 30:
+        return (
+            "Strongly prefer the anchor city; include only other cities or districts that clearly lie within the radius."
+        )
+    if radius_km <= 150:
+        return (
+            "Prefer the anchor city and its metro area; include other nearby cities in the same country when they fall within the radius."
+        )
+    if radius_km <= 800:
+        return (
+            "Include any cities within the radius in the same country and neighboring regions; the anchor city need not dominate the list."
+        )
+    return (
+        "Include any cities and countries whose major population centers fall within the radius; cross-border matches are expected when the radius is large enough."
+    )
 
 
 def load_anchor_context(db: Session, song_id: int) -> dict:
@@ -73,20 +91,29 @@ def load_anchor_context(db: Session, song_id: int) -> dict:
     }
 
 
-def build_similar_songs_llm_prompt(anchor: dict, count: int) -> str:
+def build_similar_songs_llm_prompt(anchor: dict, count: int, radius_km: int) -> str:
     with SIMILAR_PROMPT_CONFIG_PATH.open("r", encoding="utf-8") as f:
         prompt_config = json.load(f)
     ontology = _load_ontology_summary()
     system_prompt = prompt_config.get("system_prompt", "")
-    rules = prompt_config.get("rules", [])
+    rules = list(prompt_config.get("rules", []))
+    radius_template_vars = {
+        "radius_km": radius_km,
+        "anchor_city": anchor["city"],
+        "anchor_country": anchor["country"],
+        "radius_scope_hint": geography_scope_hint(radius_km),
+    }
+    for rule in prompt_config.get("radius_rules", []):
+        rules.append(rule.format(**radius_template_vars))
     sections = prompt_config.get("sections", {})
     instructions = "\n".join([system_prompt, *rules]).strip()
 
     task_body = (
-        f"Suggest exactly {count} songs that feel similar to the anchor, from or strongly tied to the same city, "
-        f"matching the anchor's styles, emotions, and era as described below.\n"
+        f"Suggest exactly {count} songs that feel similar to the anchor, with artists or acts plausibly based "
+        f"within {radius_km} km of {anchor['city']}, {anchor['country']}, matching the anchor's styles, emotions, "
+        f"and era as described below.\n"
         f"Anchor track: \"{anchor['title']}\" by {anchor['artist']}.\n"
-        f"City: {anchor['city']}. Country: {anchor['country']}.\n"
+        f"Anchor location: {anchor['city']}, {anchor['country']} (search radius: {radius_km} km).\n"
         f"Styles (from database): {anchor['styles_text']}\n"
         f"Emotions (from database): {anchor['emotions_text']}\n"
         f"Era: {anchor['time_label']} (time id: {anchor['time_id']})."
@@ -94,6 +121,7 @@ def build_similar_songs_llm_prompt(anchor: dict, count: int) -> str:
 
     anchor_block = (
         f"title={anchor['title']}\nartist={anchor['artist']}\ncity={anchor['city']}\ncountry={anchor['country']}\n"
+        f"radius_km={radius_km}\n"
         f"styles={anchor['styles_text']}\nemotions={anchor['emotions_text']}\n"
         f"era_label={anchor['time_label']}\nera_id={anchor['time_id']}"
     )
@@ -109,13 +137,18 @@ def build_similar_songs_llm_prompt(anchor: dict, count: int) -> str:
     )
 
 
-def short_user_prompt_summary(anchor: dict, count: int) -> str:
+def short_user_prompt_summary(anchor: dict, count: int, radius_km: int) -> str:
     ctry = anchor["country"] if anchor["country"] != "unknown" else ""
     place = f"{anchor['city']}, {ctry}".strip().rstrip(",") if ctry else anchor["city"]
-    return f"{count} songs similar to \"{anchor['title']}\" by {anchor['artist']} in {place}"
+    return (
+        f"{count} songs similar to \"{anchor['title']}\" by {anchor['artist']} "
+        f"within {radius_km} km of {place}"
+    )
 
 
-def generate_similar_songs(db: Session, song_id: int, count: int) -> tuple[PlaylistResponse, str]:
+def generate_similar_songs(
+    db: Session, song_id: int, count: int, radius_km: int
+) -> tuple[PlaylistResponse, str]:
     """Load anchor, build prompt, run Replicate, parse playlist JSON."""
     if not settings.replicate_api_token:
         raise HTTPException(
@@ -129,8 +162,8 @@ def generate_similar_songs(db: Session, song_id: int, count: int) -> tuple[Playl
         )
 
     anchor = load_anchor_context(db, song_id)
-    llm_prompt = build_similar_songs_llm_prompt(anchor, count)
-    user_summary = short_user_prompt_summary(anchor, count)
+    llm_prompt = build_similar_songs_llm_prompt(anchor, count, radius_km)
+    user_summary = short_user_prompt_summary(anchor, count, radius_km)
 
     client = replicate.Client(api_token=settings.replicate_api_token)
     try:

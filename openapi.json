@@ -3018,12 +3018,20 @@
             "minimum": 1.0,
             "title": "Count",
             "description": "Number of similar songs to generate"
+          },
+          "radius_km": {
+            "type": "integer",
+            "maximum": 20000.0,
+            "minimum": 1.0,
+            "title": "Radius Km",
+            "description": "Maximum distance from the anchor city; larger values allow nearby cities and cross-border matches"
           }
         },
         "type": "object",
         "required": [
           "song_id",
-          "count"
+          "count",
+          "radius_km"
         ],
         "title": "SimilarSongsRequest"
       },

@@ -7,10 +7,14 @@
     "Use only style, emotion, influence, time, and geography IDs that exist in the ontology JSON below.",
     "Return no markdown, no explanations, and no keys outside the required JSON structure.",
     "Output exactly the requested number of songs (see task section). Each entry must be a distinct track (different title and artist from each other).",
-    "Prefer artists or acts strongly associated with the anchor city; match the given styles, emotions, and era as closely as ontology allows.",
     "Exclude the anchor song itself if it would otherwise appear in the list.",
     "If style or emotion lists are sparse, infer the closest valid ontology tags while staying consistent with the anchor.",
     "Ensure every confidence field is a float between 0 and 1."
+  ],
+  "radius_rules": [
+    "Geographic constraint: every song's artist or act must be plausibly based within approximately {radius_km} km of the anchor city ({anchor_city}, {anchor_country}), using your knowledge of real-world distances between cities.",
+    "{radius_scope_hint}",
+    "When a candidate city is near the radius limit, prefer slightly inside the radius over clearly outside it; cross-border cities and countries are allowed when they fall within the radius."
   ],
   "sections": {
     "task": "Task (similar songs):",

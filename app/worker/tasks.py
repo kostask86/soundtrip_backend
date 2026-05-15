@@ -27,10 +27,12 @@ def generate_playlist_task(user_prompt: str) -> dict:
 
 
 @celery_app.task(name="generate_similar_songs_task")
-def generate_similar_songs_task(song_id: int, count: int) -> dict:
+def generate_similar_songs_task(song_id: int, count: int, radius_km: int) -> dict:
     db = SessionLocal()
     try:
-        generated, llm_prompt = generate_similar_songs(db, song_id=song_id, count=count)
+        generated, llm_prompt = generate_similar_songs(
+            db, song_id=song_id, count=count, radius_km=radius_km
+        )
         song = db.get(Song, song_id)
         title = f"Similar: {song.title}"[:255] if song is not None else None
         created = create_playlist(

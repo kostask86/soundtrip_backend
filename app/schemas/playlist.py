@@ -10,6 +10,11 @@ class PlaylistRequest(BaseModel):
 class SimilarSongsRequest(BaseModel):
     song_id: int = Field(ge=1)
     count: int = Field(ge=1, le=50, description="Number of similar songs to generate")
+    radius_km: int = Field(
+        ge=1,
+        le=20_000,
+        description="Maximum distance from the anchor city; larger values allow nearby cities and cross-border matches",
+    )
 
 
 class PlaylistStyle(BaseModel):

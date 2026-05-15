@@ -43,7 +43,7 @@ def generate_similar_songs_from_anchor(
             detail="Song has no city; cannot anchor similar-by-city.",
         )
     task = generate_similar_songs_task.apply_async(
-        args=[payload.song_id, payload.count],
+        args=[payload.song_id, payload.count, payload.radius_km],
         queue=settings.celery_queue_name,
     )
     return PlaylistGenerationJobResponse(job_id=task.id, status="queued")
