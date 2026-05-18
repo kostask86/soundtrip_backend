@@ -1,5 +1,5 @@
 from app.core.database import SessionLocal
-from app.models.tables import Song
+from app.models.tables import PlaylistType, Song
 from app.schemas.playlist import PlaylistCreate, Timespan
 from app.services.playlist_generator import generate_playlist
 from app.services.playlists import create_playlist
@@ -20,6 +20,8 @@ def generate_playlist_task(user_prompt: str) -> dict:
                 llm_prompt=llm_prompt,
                 songs=generated.songs,
             ),
+            playlist_type=PlaylistType.MAIN.value,
+            linked_playlist_id=None,
         )
         return {"playlist_id": created.id, "playlist": created.model_dump(mode="json")}
     finally:
@@ -30,6 +32,7 @@ def generate_playlist_task(user_prompt: str) -> dict:
 def generate_similar_songs_task(
     song_id: int,
     count: int,
+    linked_playlist_id: int,
     radius_km: int | None = None,
     timespan: dict | None = None,
 ) -> dict:
@@ -53,6 +56,8 @@ def generate_similar_songs_task(
                 llm_prompt=llm_prompt,
                 songs=generated.songs,
             ),
+            playlist_type=PlaylistType.SECONDARY.value,
+            linked_playlist_id=linked_playlist_id,
         )
         return {"playlist_id": created.id, "playlist": created.model_dump(mode="json")}
     finally:

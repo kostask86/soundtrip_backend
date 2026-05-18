@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 
+from fastapi import HTTPException, status
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
@@ -11,6 +12,7 @@ from app.models.tables import (
     Geography,
     Influence,
     Playlist,
+    PlaylistType,
     PlaylistSong,
     Song,
     SongEmotion,
@@ -198,6 +200,8 @@ def _extract_playlist_songs(db: Session, playlist_id: int, fallback_songs_json: 
 def _to_read_model(row: Playlist) -> PlaylistStoredRead:
     return PlaylistStoredRead(
         id=row.id,
+        type=row.playlist_type,  # type: ignore[arg-type]
+        linked_playlist_id=row.linked_playlist_id,
         title=row.title,
         user_prompt=row.user_prompt,
         llm_prompt=row.llm_prompt,
@@ -207,13 +211,65 @@ def _to_read_model(row: Playlist) -> PlaylistStoredRead:
     )
 
 
-def create_playlist(db: Session, payload: PlaylistCreate) -> PlaylistStoredRead:
+def validate_playlist_link(
+    db: Session,
+    playlist_type: str,
+    linked_playlist_id: int | None,
+    *,
+    self_playlist_id: int | None = None,
+) -> None:
+    if playlist_type == PlaylistType.MAIN.value:
+        if linked_playlist_id is not None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Main playlists cannot have a linked_playlist_id",
+            )
+        return
+
+    if playlist_type != PlaylistType.SECONDARY.value:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid playlist type: {playlist_type}",
+        )
+    if linked_playlist_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Secondary playlists require linked_playlist_id",
+        )
+    if self_playlist_id is not None and linked_playlist_id == self_playlist_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Playlist cannot link to itself",
+        )
+    parent = db.get(Playlist, linked_playlist_id)
+    if parent is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Linked playlist not found",
+        )
+    if parent.playlist_type != PlaylistType.MAIN.value:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="linked_playlist_id must reference a main playlist",
+        )
+
+
+def create_playlist(
+    db: Session,
+    payload: PlaylistCreate,
+    *,
+    playlist_type: str = PlaylistType.MAIN.value,
+    linked_playlist_id: int | None = None,
+) -> PlaylistStoredRead:
+    validate_playlist_link(db, playlist_type, linked_playlist_id)
     now = datetime.now(timezone.utc)
     row = Playlist(
         title=payload.title,
         user_prompt=payload.user_prompt,
         llm_prompt=payload.llm_prompt,
         songs_json=json.dumps([song.model_dump() for song in payload.songs]),
+        playlist_type=playlist_type,
+        linked_playlist_id=linked_playlist_id,
         created_at=now,
         updated_at=now,
     )

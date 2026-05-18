@@ -1,3 +1,4 @@
+import enum
 from datetime import datetime
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint, func
@@ -134,6 +135,11 @@ class SongSecondaryGeography(Base):
     geography_id: Mapped[int] = mapped_column(ForeignKey("geographies.id"), nullable=False, index=True)
 
 
+class PlaylistType(str, enum.Enum):
+    MAIN = "main"
+    SECONDARY = "secondary"
+
+
 class Playlist(Base):
     __tablename__ = "playlists"
 
@@ -142,6 +148,18 @@ class Playlist(Base):
     user_prompt: Mapped[str] = mapped_column(Text, nullable=False)
     llm_prompt: Mapped[str | None] = mapped_column(Text, nullable=True)
     songs_json: Mapped[str] = mapped_column(Text, nullable=False)
+    playlist_type: Mapped[str] = mapped_column(
+        "type",
+        String(16),
+        nullable=False,
+        default=PlaylistType.MAIN.value,
+        index=True,
+    )
+    linked_playlist_id: Mapped[int | None] = mapped_column(
+        ForeignKey("playlists.id"),
+        nullable=True,
+        index=True,
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 

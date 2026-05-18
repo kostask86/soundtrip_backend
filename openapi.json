@@ -2852,6 +2852,25 @@
             "type": "integer",
             "title": "Id"
           },
+          "type": {
+            "type": "string",
+            "enum": [
+              "main",
+              "secondary"
+            ],
+            "title": "Type"
+          },
+          "linked_playlist_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linked Playlist Id"
+          },
           "title": {
             "anyOf": [
               {
@@ -2899,6 +2918,8 @@
         "type": "object",
         "required": [
           "id",
+          "type",
+          "linked_playlist_id",
           "title",
           "user_prompt",
           "llm_prompt",
@@ -3019,6 +3040,12 @@
             "title": "Count",
             "description": "Number of similar songs to generate"
           },
+          "linked_playlist_id": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Linked Playlist Id",
+            "description": "Main playlist id this similar playlist derives from"
+          },
           "radius_km": {
             "anyOf": [
               {
@@ -3048,7 +3075,8 @@
         "type": "object",
         "required": [
           "song_id",
-          "count"
+          "count",
+          "linked_playlist_id"
         ],
         "title": "SimilarSongsRequest"
       },

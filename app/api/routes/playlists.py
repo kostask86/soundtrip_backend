@@ -12,7 +12,15 @@ from app.schemas.playlist import (
     PlaylistUpdate,
     SimilarSongsRequest,
 )
-from app.services.playlists import create_playlist, delete_playlist, get_playlist, list_playlists, update_playlist
+from app.models.tables import PlaylistType
+from app.services.playlists import (
+    create_playlist,
+    delete_playlist,
+    get_playlist,
+    list_playlists,
+    update_playlist,
+    validate_playlist_link,
+)
 from app.services.songs import get_song
 from app.worker.celery_app import celery_app
 from app.worker.tasks import generate_playlist_task, generate_similar_songs_task
@@ -42,9 +50,16 @@ def generate_similar_songs_from_anchor(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Song has no city; cannot anchor similar-by-city.",
         )
+    validate_playlist_link(db, PlaylistType.SECONDARY.value, payload.linked_playlist_id)
     timespan_payload = payload.timespan.model_dump() if payload.timespan else None
     task = generate_similar_songs_task.apply_async(
-        args=[payload.song_id, payload.count, payload.radius_km, timespan_payload],
+        args=[
+            payload.song_id,
+            payload.count,
+            payload.linked_playlist_id,
+            payload.radius_km,
+            timespan_payload,
+        ],
         queue=settings.celery_queue_name,
     )
     return PlaylistGenerationJobResponse(job_id=task.id, status="queued")

@@ -1,8 +1,9 @@
 from datetime import datetime
-
-from typing import Self
+from typing import Literal, Self
 
 from pydantic import BaseModel, Field, model_validator
+
+PlaylistTypeLiteral = Literal["main", "secondary"]
 
 
 class PlaylistRequest(BaseModel):
@@ -23,6 +24,7 @@ class Timespan(BaseModel):
 class SimilarSongsRequest(BaseModel):
     song_id: int = Field(ge=1)
     count: int = Field(ge=1, le=50, description="Number of similar songs to generate")
+    linked_playlist_id: int = Field(ge=1, description="Main playlist id this similar playlist derives from")
     radius_km: int | None = Field(
         default=None,
         ge=1,
@@ -119,6 +121,8 @@ class PlaylistUpdate(BaseModel):
 
 class PlaylistStoredRead(BaseModel):
     id: int
+    type: PlaylistTypeLiteral
+    linked_playlist_id: int | None
     title: str | None
     user_prompt: str
     llm_prompt: str | None
